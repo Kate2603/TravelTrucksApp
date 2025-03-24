@@ -1,0 +1,48 @@
+.header {
+  display: flex;
+  width: 1440px;
+  height: 16px;
+  padding-top: 28px;
+  padding-bottom: 28px;
+  padding-left: 64px;
+  background-color: var(--background-color-twoth);
+  border-bottom: 1px solid #dadde1;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  margin-right: 450px;
+}
+
+.logoText {
+  font-size: 18px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.travel {
+  color: var(--text-color-oneth);
+}
+
+.truck {
+  color: var(--text-color-twoth);
+}
+
+.menu {
+  display: flex;
+  gap: 32px;
+}
+
+.menuItem {
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
+  color: var(--text-color-oneth);
+  text-decoration: none;
+}
+
+.menuItem.active {
+  color: var(--text-color-fourth);
+  text-decoration: underline;
+}

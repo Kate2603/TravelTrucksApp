@@ -1,0 +1,124 @@
+.filterPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 20px;
+  width: 360px;
+  background-color: var(--background-color-oneth);
+}
+
+.filterLocation,
+.filterVehicleType,
+.filterEquipment {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 360px;
+}
+
+.filterLocation h3,
+.filterVehicleType h3,
+.filterEquipment h3 {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text-color-threeth);
+}
+
+.filterLocation input {
+  padding: 8px;
+  border: 1px solid #dadde1;
+  border-radius: 10px;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+/* Заголовки фільтрів */
+.filterLocation h3,
+.filterVehicleType h3,
+.filterEquipment h3 {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text-color-threeth);
+}
+
+.option {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.iconNameContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.iconContainer {
+  width: 112px;
+  height: 96px;
+  border-radius: 12px;
+  background-color: var(--background-color-twoth);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.icon {
+  width: 32px;
+  height: 32px;
+}
+
+.iconName {
+  font-size: 10px;
+  text-align: center;
+  color: var(--text-color-oneth);
+  width: 80px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  word-wrap: break-word;
+  margin-top: 8px;
+}
+
+.option:hover .iconContainer {
+  background-color: var(--background-color-sixth);
+}
+
+.selected {
+  fill: var(--text-color-oneth);
+}
+
+/* Стиль для списку елементів */
+.filterEquipmentList {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.vehicleTypeOptions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.applyFiltersButton {
+  width: 166px;
+  height: 56px;
+  background-color: var(--background-color-sixth);
+  color: var(--text-color-fifth);
+  font-size: 16px;
+  padding: auto;
+  border: none;
+  border-radius: 200px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.applyFiltersButton:hover {
+  background-color: var(--background-color-seventh);
+}

@@ -1,0 +1,145 @@
+.detailsContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 64px;
+  max-width: 1312px;
+  margin: 0 auto;
+}
+
+.name {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-color-oneth);
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 20px;
+  color: var(--background-color-fifth);
+}
+
+.location {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  color: var(--text-color-twoth);
+}
+
+.price {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-color-oneth);
+}
+
+.gallery {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.galleryImage {
+  width: 292px;
+  height: 312px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.description {
+  font-size: 16px;
+  color: var(--text-color-twoth);
+  margin-top: 16px;
+}
+
+.tabs {
+  display: flex;
+  gap: 40px;
+  margin-top: 24px;
+  border-bottom: 1px solid #dadde1;
+}
+
+.tabs button {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-color-oneth);
+  background-color: none;
+  border: none;
+  cursor: pointer;
+  padding-bottom: 8px;
+}
+
+.tabs button.active {
+  border-bottom: 5px solid #e44848;
+}
+
+.featuresSection,
+.reviewsSection {
+  display: flex;
+  flex-direction: column;
+  margin-top: 24px;
+}
+
+.equipment ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.equipment li {
+  background-color: var(--background-color-threeth);
+  padding: 12px 18px;
+  border-radius: 100px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-color-oneth);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.specs ul {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-color-oneth);
+}
+
+.reviewItem {
+  background-color: var(--background-color-twoth);
+  padding: 16px;
+  border-radius: 10px;
+  margin-top: 16px;
+}
+
+.reviewerInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.reviewerAvatar {
+  width: 40px;
+  height: 40px;
+  background-color: var(--background-color-fourth);
+  border-radius: 50%;
+}
+
+.reviewerRating {
+  display: flex;
+  gap: 4px;
+  font-size: 16px;
+  color: var(--background-color-fifth);
+}
+
+.bookingFormContainer {
+  margin-top: 24px;
+  background-color: var(--background-color-twoth);
+  padding: 44px;
+  border-radius: 10px;
+  width: 631px;
+}

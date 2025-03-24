@@ -1,0 +1,178 @@
+.card {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 24px;
+  gap: 24px;
+  width: 888px;
+  height: 368px;
+  background-color: var(--background-color-oneth);
+  border: 1px solid #dadde1;
+  border-radius: 20px;
+}
+
+.card-image {
+  width: 292px;
+  height: 320px;
+  background: url(image.png) no-repeat center center;
+  background-size: cover;
+  border-radius: 10px;
+}
+
+.card-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+  width: 524px;
+  height: 320px;
+}
+
+.card-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 524px;
+  height: 32px;
+}
+
+.card-title h2 {
+  font-weight: 600;
+  font-size: 24px;
+  color: var(--text-color-oneth);
+}
+
+.card-price {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  width: 156px;
+  height: 32px;
+}
+
+.card-price h2 {
+  font-weight: 600;
+  font-size: 24px;
+  color: var(--text-color-oneth);
+}
+
+.favoriteIcon {
+  width: 24px;
+  height: 24px;
+}
+
+.favoriteButton {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.favoriteButton.active {
+  background-color: var(--background-color-sixth);
+}
+
+.favoriteButton.inactive {
+  background-color: var(--background-color-eighth);
+}
+
+.details {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 16px;
+  width: 267px;
+  height: 24px;
+}
+
+.reviews {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+  width: 133px;
+  height: 24px;
+}
+
+.review-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.rating {
+  background-color: #f2f4f7;
+  border-radius: 0.5px;
+  padding: 0 4px;
+}
+
+.rating.hasRating {
+  background: var(--background-color-fifth);
+}
+
+.rating.noRating {
+  background: var(--background-color-threeth);
+}
+
+.location {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+  width: 118px;
+  height: 24px;
+}
+
+.location-icon {
+  width: 16px;
+  height: 16px;
+  background-color: var(--background-color-eighth);
+}
+
+.card-description {
+  font-family: "Inter";
+  font-weight: 400;
+  font-size: 16px;
+  color: var(--text-color-twoth);
+  width: 100%;
+  height: auto;
+}
+
+.equipment {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  height: auto;
+}
+
+.equipment-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-color-oneth);
+}
+
+.equipment-item .icon {
+  width: 20px;
+  height: 20px;
+  background-color: var(--background-color-eighth);
+}
+
+.show-more-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 60px;
+  background-color: var(--background-color-sixth);
+  border-radius: 200px;
+  color: var(--text-color-fifth);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
+  width: 166px;
+  height: 56px;
+}
