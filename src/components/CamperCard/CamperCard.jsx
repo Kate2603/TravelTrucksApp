@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleFavorite } from "../../redux/favoritesSlice.js";
@@ -144,6 +145,28 @@ const CampersCard = ({ camper }) => {
       </Link>
     </div>
   );
+};
+
+CampersCard.propTypes = {
+  camper: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    price: PropTypes.number.isRequired,
+    location: PropTypes.string.isRequired,
+    rating: PropTypes.number,
+    reviewsCount: PropTypes.number,
+    description: PropTypes.string.isRequired,
+    image: PropTypes.string.isRequired,
+    AC: PropTypes.bool,
+    bathroom: PropTypes.bool,
+    kitchen: PropTypes.bool,
+    TV: PropTypes.bool,
+    radio: PropTypes.bool,
+    refrigerator: PropTypes.bool,
+    microwave: PropTypes.bool,
+    gas: PropTypes.bool,
+    water: PropTypes.bool,
+  }).isRequired,
 };
 
 export default CampersCard;
