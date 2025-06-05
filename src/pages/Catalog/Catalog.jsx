@@ -1,55 +1,39 @@
-import { useSelector, useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
-import { fetchCampers } from "../../redux/operations.js";
-import { selectFilteredCampers, selectLoading } from "../../redux/selectors.js";
-import CamperCard from "../../components/CamperCard/CamperCard";
-import FilterPanel from "../../components/FilterPanel/FilterPanel";
-import styles from "./Catalog.module.css";
-import { selectFilters } from "../../redux/filtersSlice.js";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchCampers,
+  resetCampers,
+  incrementPage,
+} from "../../redux/campersSlice";
+import CampersCard from "../CampersCard/CampersCard";
 
 const Catalog = () => {
   const dispatch = useDispatch();
-  const campers = useSelector(selectFilteredCampers); // Фільтровані кемпери
-  const isLoading = useSelector(selectLoading); // Статус завантаження
-  const filters = useSelector(selectFilters); // Поточні фільтри
-  const [page, setPage] = useState(1); // Стан сторінки
+  const { filters, page, items, hasMore, status } = useSelector(
+    (state) => state.campers
+  );
 
-  // Завантажуємо кемперів при зміні фільтрів або сторінки
   useEffect(() => {
-    dispatch(fetchCampers(filters, page)); // Оновлення кемперів з фільтрами і пагінацією
-  }, [dispatch, filters, page]); // Залежить від фільтрів і сторінки
+    dispatch(resetCampers());
+    dispatch(fetchCampers({ ...filters, page: 1 }));
+
+    // Скидаємо скрол вгору
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [filters.location, filters.form, filters.features.join(",")]);
 
   const handleLoadMore = () => {
-    setPage((prevPage) => prevPage + 1); // Завантажуємо наступні 4 елементи
+    dispatch(incrementPage());
+    dispatch(fetchCampers({ ...filters, page: page + 1 }));
   };
 
   return (
-    <div className={styles.catalogContainer}>
-      {/* Панель фільтрів */}
-      <FilterPanel />
-
-      {/* Виведення кемперів */}
-      {isLoading ? (
-        <p className={styles.loading}>Loading...</p>
-      ) : (
-        <>
-          <ul className={styles.catalogList}>
-            {campers.slice(0, 4).map((camper) => (
-              <li key={camper.id} className={styles.catalogItem}>
-                <CamperCard camper={camper} />
-              </li>
-            ))}
-          </ul>
-
-          {/* Кнопка "Load more" */}
-          <button
-            className={styles.loadMoreButton}
-            onClick={handleLoadMore}
-            disabled={isLoading}
-          >
-            Load more
-          </button>
-        </>
+    <div>
+      {items.map((camper) => (
+        <CampersCard key={camper.id} camper={camper} />
+      ))}
+      {status === "loading" && <p>Завантаження...</p>}
+      {hasMore && status !== "loading" && (
+        <button onClick={handleLoadMore}>Load More</button>
       )}
     </div>
   );

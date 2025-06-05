@@ -45,11 +45,10 @@ const CampersCard = ({ camper }) => {
         <p className={styles.price}>${formatPrice(price)}</p>
         <button
           onClick={handleToggleFavorite}
-          className={`${styles.favoriteButton} ${
-            isFavorite ? "active" : "inactive"
-          }`}
           style={{ backgroundColor: favoriteButtonColor }}
+          className={styles.favoriteButton}
         >
+          {isFavorite ? "Видалити з обраного" : "Додати до обраного"}
           <svg className={styles.favoriteIcon}>
             <use href="/img/sprite.svg#icon-heart" />
           </svg>
@@ -140,7 +139,7 @@ const CampersCard = ({ camper }) => {
           )}
         </ul>
       </div>
-      <Link to={`/campers/${id}`} className={styles.showMoreButton}>
+      <Link to={`/catalog/${id}`} className={styles.showMoreButton}>
         Show More
       </Link>
     </div>

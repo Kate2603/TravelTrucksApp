@@ -1,0 +1,20 @@
+.wrapper {
+  padding: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+}
+.features,
+.details,
+.reviews,
+.booking {
+  margin-top: 2rem;
+}
+.booking input {
+  display: block;
+  margin: 0.5rem 0;
+}

@@ -1,143 +1,128 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { updateFilters } from "../../redux/filtersSlice.js";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setLocation,
+  setForm,
+  toggleFeature,
+  resetFilters,
+} from "../../redux/campersSlice";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import styles from "./FilterPanel.module.css";
-
-// Іконки для обладнання
-const equipmentIcons = {
-  Radio: "icon-ui-radios",
-  Consumption: "icon-fuel-pump",
-  Gas: "icon-gas-stove",
-  Microwave: "icon-microwave",
-  Refrigerator: "icon-fridge",
-  AC: "icon-wind",
-  Bathroom: "icon-shower",
-  Kitchen: "icon-cup-hot",
-  TV: "icon-tv",
-  Water: "icon-water",
-  Transmission: "icon-diagram",
-};
-
-// Іконки для типів транспорту
-const vehicleTypeIcons = {
-  Van: "icon-bi_grid-1x2",
-  "Fully Integrated": "icon-bi_grid",
-  Alcove: "icon-bi_grid-3x3-gap",
-};
 
 const FilterPanel = () => {
   const dispatch = useDispatch();
+  const { filters } = useSelector((state) => state.campers);
+  const [, setSearchParams] = useSearchParams();
+  const [suggestions, setSuggestions] = useState([]);
 
-  const [selectedEquipment, setSelectedEquipment] = useState([]);
-  const [vehicleType, setVehicleType] = useState(null);
-  const [location, setLocation] = useState("");
+  // Автоматичне визначення місцезнаходження
+  useEffect(() => {
+    if (!filters.location) {
+      navigator.geolocation.getCurrentPosition(async (pos) => {
+        const { latitude, longitude } = pos.coords;
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+        );
+        const data = await res.json();
+        const city =
+          data.address?.city || data.address?.town || data.address?.village;
+        if (city) dispatch(setLocation(city));
+      });
+    }
+  }, []);
 
-  // Оновлення фільтрів через Redux
-  const handleEquipmentChange = (item) => {
-    setSelectedEquipment((prev) => {
-      const isSelected = prev.includes(item);
-      const updated = isSelected
-        ? prev.filter((eq) => eq !== item)
-        : [...prev, item];
-      dispatch(updateFilters({ selectedEquipment: updated }));
-      return updated;
-    });
-  };
+  // Синхронізація фільтрів з URL
+  useEffect(() => {
+    const params = {};
+    if (filters.location) params.location = filters.location;
+    if (filters.form) params.form = filters.form;
+    if (filters.features.length > 0)
+      params.features = filters.features.join(",");
+    setSearchParams(params);
+  }, [filters]);
 
-  const handleVehicleTypeChange = (type) => {
-    const updatedType = type === vehicleType ? null : type;
-    setVehicleType(updatedType);
-    dispatch(updateFilters({ vehicleType: updatedType }));
-  };
-
-  const handleLocationChange = (e) => {
+  // Автопідказки міст
+  const handleLocationInput = async (e) => {
     const value = e.target.value;
-    setLocation(value);
-    dispatch(updateFilters({ location: value }));
+    dispatch(setLocation(value));
+
+    if (value.length < 3) return setSuggestions([]);
+
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/search?city=${value}&format=json&limit=5`
+    );
+    const data = await res.json();
+    setSuggestions(data.map((d) => d.display_name));
+  };
+
+  const handleFormChange = (e) => {
+    dispatch(setForm(e.target.value));
+  };
+
+  const handleFeatureToggle = (feature) => {
+    dispatch(toggleFeature(feature));
+  };
+
+  const handleSuggestionClick = (city) => {
+    dispatch(setLocation(city));
+    setSuggestions([]);
   };
 
   return (
     <div className={styles.filterPanel}>
-      {/* Фільтр за локацією */}
-      <div className={styles.filterLocation}>
-        <h3>Location</h3>
-        <div className={styles.locationInput}>
-          <svg className={styles.icon}>
-            <use href="/sprite.svg#icon-location" />
-          </svg>
-          <input
-            type="text"
-            placeholder="Enter location"
-            value={location}
-            onChange={handleLocationChange}
-          />
-        </div>
-      </div>
+      <h3>Фільтри</h3>
 
-      {/* Фільтри */}
-      <div className={styles.filters}>
-        <h3>Filters</h3>
-
-        {/* Фільтр за обладнанням */}
-        <div className={styles.filterEquipment}>
-          <h4>Vehicle Equipment</h4>
-          <ul className={styles.filterEquipmentList}>
-            {Object.entries(equipmentIcons).map(([item, icon]) => (
-              <li
-                key={item}
-                onClick={() => handleEquipmentChange(item)}
-                className={`${styles.option} ${
-                  selectedEquipment.includes(item) ? styles.selected : ""
-                }`}
-              >
-                <div className={styles.iconNameContainer}>
-                  <div className={styles.iconContainer}>
-                    <svg className={styles.icon}>
-                      <use href={`/sprite.svg#${icon}`} />
-                    </svg>
-                    <span className={styles.iconName}>{item}</span>
-                  </div>
-                </div>
+      {/* Локація */}
+      <div className={styles.filterGroup}>
+        <label>Локація:</label>
+        <input
+          type="text"
+          value={filters.location}
+          onChange={handleLocationInput}
+          placeholder="Введіть місто..."
+        />
+        {suggestions.length > 0 && (
+          <ul className={styles.suggestions}>
+            {suggestions.map((s, i) => (
+              <li key={i} onClick={() => handleSuggestionClick(s)}>
+                {s}
               </li>
             ))}
           </ul>
-        </div>
+        )}
+      </div>
 
-        {/* Фільтр за типом транспорту */}
-        <div className={styles.filterVehicleType}>
-          <h4>Vehicle Type</h4>
-          <div className={styles.vehicleTypeOptions}>
-            {Object.entries(vehicleTypeIcons).map(([type, icon]) => (
-              <div
-                key={type}
-                className={`${styles.option} ${
-                  vehicleType === type ? styles.selected : ""
-                }`}
-                onClick={() => handleVehicleTypeChange(type)}
-              >
-                <div className={styles.iconNameContainer}>
-                  <div className={styles.iconContainer}>
-                    <svg className={styles.icon}>
-                      <use href={`/sprite.svg#${icon}`} />
-                    </svg>
-                    <span className={styles.iconName}>{type}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+      {/* Тип кемпера */}
+      <div className={styles.filterGroup}>
+        <label>Тип кемпера:</label>
+        <select value={filters.form} onChange={handleFormChange}>
+          <option value="">Усі</option>
+          <option value="van">Фургон</option>
+          <option value="alcove">Альков</option>
+          <option value="integrated">Інтегрований</option>
+        </select>
+      </div>
+
+      {/* Особливості */}
+      <div className={styles.filterGroup}>
+        <label>Особливості:</label>
+        <div className={styles.checkboxGroup}>
+          {["airConditioner", "kitchen", "tv", "toilet", "shower", "gps"].map(
+            (feature) => (
+              <label key={feature}>
+                <input
+                  type="checkbox"
+                  checked={filters.features.includes(feature)}
+                  onChange={() => handleFeatureToggle(feature)}
+                />
+                {feature}
+              </label>
+            )
+          )}
         </div>
       </div>
 
-      {/* Кнопка застосування фільтрів */}
-      <button
-        className={styles.applyFiltersButton}
-        onClick={() =>
-          dispatch(updateFilters({ location, selectedEquipment, vehicleType }))
-        }
-      >
-        Search
-      </button>
+      <button onClick={() => dispatch(resetFilters())}>Скинути фільтри</button>
     </div>
   );
 };
