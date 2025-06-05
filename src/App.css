@@ -1,15 +1,16 @@
-#root {
-  --text-color-oneth: #101828;
-  --text-color-twoth: #475467;
-  --text-color-threeth: #6c717b;
-  --text-color-fourth: #d84343;
-  --text-color-fifth: #ffffff;
-  --background-color-oneth: #ffffff;
-  --background-color-twoth: #f7f7f7;
-  --background-color-threeth: #f2f4f7;
-  --background-color-fourth: #dadde1;
-  --background-color-fifth: #ffc531;
-  --background-color-sixth: #e44848;
-  --background-color-seventh: #d84343;
-  --background-color-eighth: #101828;
+:root {
+  --text-primary: #101828;
+  --text-secondary: #475467;
+  --text-muted: #6c717b;
+  --text-error: #d84343;
+  --text-inverted: #ffffff;
+
+  --bg-primary: #ffffff;
+  --bg-secondary: #f7f7f7;
+  --bg-light: #f2f4f7;
+  --bg-border: #dadde1;
+  --bg-warning: #ffc531;
+  --bg-error: #e44848;
+  --bg-error-dark: #d84343;
+  --bg-dark: #101828;
 }

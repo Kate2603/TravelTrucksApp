@@ -3,6 +3,16 @@
   max-width: 900px;
   margin: 0 auto;
 }
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  min-height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .gallery {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));

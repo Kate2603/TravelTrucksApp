@@ -5,7 +5,12 @@ import filtersReducer from "./filters/filtersSlice";
 import uiReducer from "./ui/uiSlice";
 import { favoritesMiddleware } from "./favorites/favoritesMiddleware";
 
-const preloadedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
+let preloadedFavorites = [];
+try {
+  preloadedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
+} catch (err) {
+  console.warn("Invalid favorites JSON in localStorage:", err);
+}
 
 export const store = configureStore({
   reducer: {
@@ -14,7 +19,7 @@ export const store = configureStore({
     filters: filtersReducer,
     ui: uiReducer,
   },
-  middleware: (getDefaultMiddleware) =>
+  middleware: getDefaultMiddleware =>
     getDefaultMiddleware().concat(favoritesMiddleware),
   preloadedState: {
     favorites: preloadedFavorites,

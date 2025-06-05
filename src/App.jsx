@@ -1,37 +1,47 @@
-import React from "react";
+import React, { useEffect, useMemo, lazy, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Provider, useSelector } from "react-redux";
 import { store } from "./redux/store";
 import { selectFavorites } from "./redux/favoritesSlice";
 
 import Header from "./components/Header/Header";
-import Home from "./pages/Home/Home";
-import Catalog from "./pages/Catalog/Catalog";
-import CamperDetailsPage from "./pages/CamperDetailsPage/CamperDetailsPage";
-import NotFound from "./components/NotFound/NotFound";
-
-import { useEffect } from "react";
+import Loader from "./components/Loader/Loader";
 import "./App.css";
 
-function AppContent() {
+// Lazy-loaded pages
+const Home = lazy(() => import("./pages/Home/Home"));
+const Catalog = lazy(() => import("./pages/Catalog/Catalog"));
+const CamperDetailsPage = lazy(
+  () => import("./pages/CamperDetailsPage/CamperDetailsPage")
+);
+const NotFound = lazy(() => import("./components/NotFound/NotFound"));
+
+const AppContent = React.memo(() => {
   const favorites = useSelector(selectFavorites);
+  const favoritesJSON = useMemo(() => JSON.stringify(favorites), [favorites]);
 
   useEffect(() => {
-    localStorage.setItem("favorites", JSON.stringify(favorites));
-  }, [favorites]);
+    try {
+      localStorage.setItem("favorites", favoritesJSON);
+    } catch (err) {
+      console.error("❌ Failed to store favorites in localStorage:", err);
+    }
+  }, [favoritesJSON]);
 
   return (
     <>
       <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/catalog" element={<Catalog />} />
-        <Route path="/catalog/:id" element={<CamperDetailsPage />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <Suspense fallback={<Loader />}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/catalog" element={<Catalog />} />
+          <Route path="/catalog/:id" element={<CamperDetailsPage />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
     </>
   );
-}
+});
 
 function App() {
   return (

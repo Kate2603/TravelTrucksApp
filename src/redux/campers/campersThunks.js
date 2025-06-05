@@ -18,7 +18,7 @@ export const fetchCampers = createAsyncThunk(
       params.append("limit", limit);
 
       const res = await axios.get(`${API_URL}?${params.toString()}`);
-      return res.data;
+      return res.data || [];
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);
     }

@@ -6,6 +6,7 @@ const filtersSlice = createSlice({
     location: "",
     form: "",
     features: [],
+    search: "",
   },
   reducers: {
     setLocation(state, action) {
@@ -17,7 +18,7 @@ const filtersSlice = createSlice({
     toggleFeature(state, action) {
       const feature = action.payload;
       if (state.features.includes(feature)) {
-        state.features = state.features.filter((f) => f !== feature);
+        state.features = state.features.filter(f => f !== feature);
       } else {
         state.features.push(feature);
       }
@@ -27,11 +28,25 @@ const filtersSlice = createSlice({
         location: "",
         form: "",
         features: [],
+        search: "",
       };
+    },
+    setSearch(state, action) {
+      state.search = action.payload;
+    },
+    setFilters(state, action) {
+      Object.assign(state, action.payload);
     },
   },
 });
 
-export const { setLocation, setForm, toggleFeature, resetFilters } =
-  filtersSlice.actions;
+export const {
+  setLocation,
+  setForm,
+  toggleFeature,
+  resetFilters,
+  setSearch,
+  setFilters,
+} = filtersSlice.actions;
+
 export default filtersSlice.reducer;

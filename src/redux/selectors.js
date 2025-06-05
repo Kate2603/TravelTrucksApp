@@ -1,12 +1,12 @@
 import { createSelector } from "@reduxjs/toolkit";
 
-const selectCampers = (state) => state.campers.list;
-const selectFilters = (state) => state.filters;
+const selectCampers = state => state.campers.items;
+const selectFilters = state => state.filters;
 
 export const selectFilteredCampers = createSelector(
   [selectCampers, selectFilters],
   (campers, filters) => {
-    return campers.filter((camper) => {
+    return campers.filter(camper => {
       if (
         filters.search &&
         !camper.name.toLowerCase().includes(filters.search.toLowerCase())
@@ -18,5 +18,5 @@ export const selectFilteredCampers = createSelector(
       }
       return true;
     });
-  },
+  }
 );

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setLocation,
@@ -6,33 +6,35 @@ import {
   toggleFeature,
   resetFilters,
 } from "../../redux/campers/campersSlice";
-import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import styles from "./FiltersPanel.module.css";
 
-const FilterPanel = () => {
+const FilterPanel = ({ onFilterChange }) => {
   const dispatch = useDispatch();
-  const { filters } = useSelector((state) => state.campers);
+  const { filters } = useSelector(state => state.campers);
   const [, setSearchParams] = useSearchParams();
   const [suggestions, setSuggestions] = useState([]);
 
-  // Автоматичне визначення місцезнаходження
+  // Геолокація
   useEffect(() => {
     if (!filters.location) {
-      navigator.geolocation.getCurrentPosition(async (pos) => {
+      navigator.geolocation.getCurrentPosition(async pos => {
         const { latitude, longitude } = pos.coords;
         const res = await fetch(
-          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`,
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
         );
         const data = await res.json();
         const city =
           data.address?.city || data.address?.town || data.address?.village;
-        if (city) dispatch(setLocation(city));
+        if (city) {
+          dispatch(setLocation(city));
+          onFilterChange?.();
+        }
       });
     }
   }, []);
 
-  // Синхронізація фільтрів з URL
+  // Синхронізація URL
   useEffect(() => {
     const params = {};
     if (filters.location) params.location = filters.location;
@@ -43,30 +45,39 @@ const FilterPanel = () => {
   }, [filters]);
 
   // Автопідказки міст
-  const handleLocationInput = async (e) => {
+  const handleLocationInput = async e => {
     const value = e.target.value;
     dispatch(setLocation(value));
+    onFilterChange?.();
 
     if (value.length < 3) return setSuggestions([]);
 
     const res = await fetch(
-      `https://nominatim.openstreetmap.org/search?city=${value}&format=json&limit=5`,
+      `https://nominatim.openstreetmap.org/search?city=${value}&format=json&limit=5`
     );
     const data = await res.json();
-    setSuggestions(data.map((d) => d.display_name));
+    setSuggestions(data.map(d => d.display_name));
   };
 
-  const handleFormChange = (e) => {
-    dispatch(setForm(e.target.value));
-  };
-
-  const handleFeatureToggle = (feature) => {
-    dispatch(toggleFeature(feature));
-  };
-
-  const handleSuggestionClick = (city) => {
+  const handleSuggestionClick = city => {
     dispatch(setLocation(city));
     setSuggestions([]);
+    onFilterChange?.();
+  };
+
+  const handleFormChange = e => {
+    dispatch(setForm(e.target.value));
+    onFilterChange?.();
+  };
+
+  const handleFeatureToggle = feature => {
+    dispatch(toggleFeature(feature));
+    onFilterChange?.();
+  };
+
+  const handleReset = () => {
+    dispatch(resetFilters());
+    onFilterChange?.();
   };
 
   return (
@@ -109,7 +120,7 @@ const FilterPanel = () => {
         <label>Особливості:</label>
         <div className={styles.checkboxGroup}>
           {["airConditioner", "kitchen", "tv", "toilet", "shower", "gps"].map(
-            (feature) => (
+            feature => (
               <label key={feature}>
                 <input
                   type="checkbox"
@@ -118,12 +129,12 @@ const FilterPanel = () => {
                 />
                 {feature}
               </label>
-            ),
+            )
           )}
         </div>
       </div>
 
-      <button onClick={() => dispatch(resetFilters())}>Скинути фільтри</button>
+      <button onClick={handleReset}>Скинути фільтри</button>
     </div>
   );
 };

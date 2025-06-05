@@ -1,21 +1,41 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { fetchCamperById } from "../redux/campers/campersSlice";
+import { fetchCamperById } from "../../redux/campers/campersSlice";
 import styles from "./CamperDetailsPage.module.css";
+import Loader from "../../components/Loader/Loader";
 
 export default function CamperDetailsPage() {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const camper = useSelector((state) => state.campers.currentCamper);
-  const isLoading = useSelector((state) => state.campers.isLoading);
-  const error = useSelector((state) => state.campers.error);
+  const camper = useSelector(state => state.campers.currentCamper);
+  const isLoading = useSelector(state => state.campers.isLoading);
+  const error = useSelector(state => state.campers.error);
+  const [isBooking, setIsBooking] = useState(false);
+  const [loadedImages, setLoadedImages] = useState({});
 
   useEffect(() => {
     dispatch(fetchCamperById(id));
   }, [dispatch, id]);
 
-  if (isLoading) return <p>Loading...</p>;
+  const handleImageLoad = index => {
+    setLoadedImages(prev => ({ ...prev, [index]: true }));
+  };
+
+  const handleBooking = async e => {
+    e.preventDefault();
+    setIsBooking(true);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 2000)); // імітація API
+      alert("Booking successful!");
+    } catch (error) {
+      alert("Booking failed!");
+    } finally {
+      setIsBooking(false);
+    }
+  };
+
+  if (isLoading) return <Loader />;
   if (error) return <p>Error: {error}</p>;
   if (!camper) return null;
 
@@ -32,7 +52,15 @@ export default function CamperDetailsPage() {
 
       <div className={styles.gallery}>
         {camper.gallery?.map((img, i) => (
-          <img key={i} src={img} alt={`${camper.name}-${i}`} />
+          <div key={i} className={styles.imageWrapper}>
+            {!loadedImages[i] && <Loader />}
+            <img
+              src={img}
+              alt={`${camper.name}-${i}`}
+              onLoad={() => handleImageLoad(i)}
+              style={{ display: loadedImages[i] ? "block" : "none" }}
+            />
+          </div>
         ))}
       </div>
 
@@ -51,7 +79,7 @@ export default function CamperDetailsPage() {
             "water",
             "transmission",
             "engine",
-          ].map((key) =>
+          ].map(key =>
             camper[key] ? (
               <li key={key}>
                 {key}: {camper[key]}
@@ -65,7 +93,7 @@ export default function CamperDetailsPage() {
         <h2>Details</h2>
         <ul>
           {["form", "length", "width", "height", "tank", "consumption"].map(
-            (key) =>
+            key =>
               camper.details?.[key] ? (
                 <li key={key}>
                   {key}: {camper.details[key]}
@@ -88,22 +116,21 @@ export default function CamperDetailsPage() {
 
       <div className={styles.booking}>
         <h2>Book this camper</h2>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            alert("Booking successful!");
-          }}
-        >
-          <label>
-            Name:
-            <input type="text" required />
-          </label>
-          <label>
-            Phone:
-            <input type="tel" required />
-          </label>
-          <button type="submit">Book now</button>
-        </form>
+        {isBooking ? (
+          <Loader />
+        ) : (
+          <form onSubmit={handleBooking}>
+            <label>
+              Name:
+              <input type="text" required />
+            </label>
+            <label>
+              Phone:
+              <input type="tel" required />
+            </label>
+            <button type="submit">Book now</button>
+          </form>
+        )}
       </div>
     </div>
   );
