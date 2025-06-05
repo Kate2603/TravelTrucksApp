@@ -26,7 +26,7 @@ const CampersCard = ({ camper }) => {
   };
 
   const formatPrice = (price) => {
-    return price.toFixed(2);
+    return price.toLocaleString("en-US", { minimumFractionDigits: 2 });
   };
 
   const ratingColor = rating ? "#ffc531" : "#F2F4F7";
@@ -60,7 +60,7 @@ const CampersCard = ({ camper }) => {
           <svg className={styles.icon} style={{ fill: ratingColor }}>
             <use href="/img/sprite.svg#icon-star" />
           </svg>
-          {rating ? `${rating} (${reviewsCount} Reviews)` : "No Rating"}
+          {rating ? `${rating} (${reviewsCount || 0} Reviews)` : "No Rating"}
         </span>
       </div>
       <p className={styles.description}>{description}</p>

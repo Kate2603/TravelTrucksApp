@@ -1,5 +1,4 @@
-import React from "react";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchCampers,
@@ -16,15 +15,28 @@ const Catalog = () => {
 
   useEffect(() => {
     dispatch(resetCampers());
-    dispatch(fetchCampers({ ...filters, page: 1 }));
+    dispatch(
+      fetchCampers({
+        page: 1,
+        location: filters.location,
+        form: filters.form,
+        features: filters.features,
+      })
+    );
 
-    // Скидаємо скрол вгору
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [filters.location, filters.form, filters.features.join(",")]);
 
   const handleLoadMore = () => {
     dispatch(incrementPage());
-    dispatch(fetchCampers({ ...filters, page: page + 1 }));
+    dispatch(
+      fetchCampers({
+        page: page + 1,
+        location: filters.location,
+        form: filters.form,
+        features: filters.features,
+      })
+    );
   };
 
   return (

@@ -6,23 +6,22 @@ const API_URL = "https://66b1f8e71ca8ad33d4f5f63e.mockapi.io/campers";
 // Thunk з параметрами: фільтри, сторінка, ліміт
 export const fetchCampers = createAsyncThunk(
   "campers/fetchCampers",
-  async ({ page = 1, limit = 4, filters = {} }, { rejectWithValue }) => {
+  async (
+    { page = 1, limit = 4, location = "", form = "", features = [] },
+    { rejectWithValue }
+  ) => {
     try {
-      const { location, form, features } = filters;
-
       const params = new URLSearchParams();
       if (location) params.append("location", location);
       if (form) params.append("form", form);
-      if (features?.length > 0) {
-        features.forEach((feature) => params.append("features", feature));
-      }
+      if (features.length > 0) params.append("features", features.join(","));
       params.append("page", page);
       params.append("limit", limit);
 
       const response = await axios.get(`${API_URL}?${params.toString()}`);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error.response?.data?.message || error.message);
     }
   }
 );
