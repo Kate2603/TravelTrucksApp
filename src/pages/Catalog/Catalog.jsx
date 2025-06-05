@@ -1,55 +1,26 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchCampers,
-  resetCampers,
-  incrementPage,
-} from "../../redux/campersSlice";
-import CampersCard from "../CampersCard/CampersCard";
+import React from "react";
+import { useSelector } from "react-redux";
+import CamperCard from "./CamperCard";
+import FiltersPanel from "./FiltersPanel";
+import { selectFilteredCampers } from "../store/selectors";
+import { useFilters } from "../hooks/useFilters";
 
-const Catalog = () => {
-  const dispatch = useDispatch();
-  const { filters, page, items, hasMore, status } = useSelector(
-    (state) => state.campers
-  );
-
-  useEffect(() => {
-    dispatch(resetCampers());
-    dispatch(
-      fetchCampers({
-        page: 1,
-        location: filters.location,
-        form: filters.form,
-        features: filters.features,
-      })
-    );
-
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [filters.location, filters.form, filters.features.join(",")]);
-
-  const handleLoadMore = () => {
-    dispatch(incrementPage());
-    dispatch(
-      fetchCampers({
-        page: page + 1,
-        location: filters.location,
-        form: filters.form,
-        features: filters.features,
-      })
-    );
-  };
+export default function Catalog() {
+  const campers = useSelector(selectFilteredCampers);
+  const { filters, updateFilters } = useFilters();
 
   return (
     <div>
-      {items.map((camper) => (
-        <CampersCard key={camper.id} camper={camper} />
-      ))}
-      {status === "loading" && <p>Завантаження...</p>}
-      {hasMore && status !== "loading" && (
-        <button onClick={handleLoadMore}>Load More</button>
-      )}
+      <FiltersPanel filters={filters} onChange={updateFilters} />
+      <div className="catalog-list">
+        {campers.length === 0 ? (
+          <p>No campers found matching your criteria.</p>
+        ) : (
+          campers.map((camper) => (
+            <CampersCard key={camper.id} camper={camper} />
+          ))
+        )}
+      </div>
     </div>
   );
-};
-
-export default Catalog;
+}

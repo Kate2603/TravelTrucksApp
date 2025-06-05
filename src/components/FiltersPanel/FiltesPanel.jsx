@@ -5,10 +5,10 @@ import {
   setForm,
   toggleFeature,
   resetFilters,
-} from "../../redux/campersSlice";
+} from "../../redux/campers/campersSlice";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import styles from "./FilterPanel.module.css";
+import styles from "./FiltersPanel.module.css";
 
 const FilterPanel = () => {
   const dispatch = useDispatch();
@@ -22,7 +22,7 @@ const FilterPanel = () => {
       navigator.geolocation.getCurrentPosition(async (pos) => {
         const { latitude, longitude } = pos.coords;
         const res = await fetch(
-          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`,
         );
         const data = await res.json();
         const city =
@@ -50,7 +50,7 @@ const FilterPanel = () => {
     if (value.length < 3) return setSuggestions([]);
 
     const res = await fetch(
-      `https://nominatim.openstreetmap.org/search?city=${value}&format=json&limit=5`
+      `https://nominatim.openstreetmap.org/search?city=${value}&format=json&limit=5`,
     );
     const data = await res.json();
     setSuggestions(data.map((d) => d.display_name));
@@ -118,7 +118,7 @@ const FilterPanel = () => {
                 />
                 {feature}
               </label>
-            )
+            ),
           )}
         </div>
       </div>
