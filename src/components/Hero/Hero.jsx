@@ -8,7 +8,6 @@ const Hero = () => {
   const navigate = useNavigate();
   const [heroImage, setHeroImage] = useState(heroImage1x);
 
-  // Визначаємо зображення в залежності від роздільної здатності екрану
   useEffect(() => {
     if (window.devicePixelRatio >= 2) {
       setHeroImage(heroImage2x);
@@ -21,12 +20,6 @@ const Hero = () => {
 
   return (
     <section className={styles.hero}>
-      <div
-        className={styles.image}
-        style={{
-          backgroundImage: `url(${heroImage})`,
-        }}
-      ></div>
       <div className={styles.content}>
         <h1 className={styles.h1}>Campers of your dreams</h1>
         <p className={styles.p}>
@@ -36,6 +29,10 @@ const Hero = () => {
           View Now
         </button>
       </div>
+      <div
+        className={styles.image}
+        style={{ backgroundImage: `url(${heroImage})` }}
+      ></div>
     </section>
   );
 };

@@ -1,155 +1,105 @@
 .bookingForm {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  max-width: 600px;
-  margin: 40px auto;
-  padding: 30px;
-  background-color: var(--background-color-oneth);
-  border: 1px solid #dadde1;
-  border-radius: 12px;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 2rem;
+  border-radius: 1rem;
+  background-color: #ffffff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  font-family: "Segoe UI", sans-serif;
 }
 
 .bookingForm h2 {
-  font-size: 24px;
-  font-weight: 600;
-  color: var(--text-color-oneth);
-  margin-bottom: 10px;
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
 }
 
 .bookingForm p {
-  font-size: 16px;
-  color: var(--text-color-threeth);
-  margin-bottom: 20px;
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #666;
 }
 
-.bookingForm label {
-  font-weight: bold;
-  font-size: 16px;
-  color: var(--text-color-threeth);
-  margin-bottom: 5px;
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
 }
 
-.bookingForm input,
-.bookingForm textarea {
-  padding: 12px;
-  font-size: 16px;
+.inputGroup label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.inputGroup input,
+.inputGroup textarea {
+  padding: 0.75rem 1rem;
   border: 1px solid #ccc;
-  border-radius: 8px;
-  width: 100%;
-  background-color: var(--background-color-twoth);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: border 0.3s ease;
 }
 
-.bookingForm textarea {
+.inputGroup input:focus,
+.inputGroup textarea:focus {
+  outline: none;
+  border-color: #007aff;
+  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.2);
+}
+
+textarea {
   resize: vertical;
   min-height: 100px;
 }
 
-.bookingForm input::placeholder,
-.bookingForm textarea::placeholder {
-  color: #aaa;
-}
-
 .error {
-  color: red;
-  font-size: 12px;
+  color: #d32f2f;
+  font-size: 0.875rem;
+  margin-top: 0.4rem;
 }
 
-.bookingForm button {
-  padding: 12px 20px;
-  background-color: var(--background-color-sixth);
+button[type="submit"],
+button {
+  width: 100%;
+  background-color: #007aff;
   color: white;
   border: none;
+  padding: 0.85rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  border-radius: 8px;
-  font-weight: bold;
-  width: 100%;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s ease;
 }
 
-.bookingForm button:hover {
-  background-color: var(--background-color-seventh);
+button[type="submit"]:hover,
+button:hover {
+  background-color: #005fcc;
+}
+
+button:disabled {
+  background-color: #b0c7e4;
+  cursor: not-allowed;
 }
 
 .successMessage {
+  max-width: 480px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background-color: #e8f5e9;
+  border: 1px solid #c8e6c9;
+  border-radius: 1rem;
   text-align: center;
-  padding: 20px;
-  background-color: var(--background-color-oneth);
-  border-radius: 8px;
-  border: 1px solid #6c717b;
 }
 
 .successMessage h3 {
-  font-size: 20px;
-  color: var(--text-color-oneth);
+  font-size: 1.5rem;
+  color: #2e7d32;
+  margin-bottom: 1rem;
 }
 
 .successMessage p {
-  font-size: 16px;
-  color: var(--text-color-threeth);
-}
-
-.bookingForm .input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.bookingForm input,
-.bookingForm textarea {
-  background-color: var(--background-color-twoth);
-  border-radius: 10px;
-}
-
-.bookingForm .input-group label {
-  font-size: 16px;
-  color: var(--text-color-threeth);
-  font-weight: 400;
-}
-
-.bookingForm input[type="text"],
-.bookingForm input[type="email"],
-.bookingForm input[type="date"] {
-  padding: 10px;
-  border-radius: 8px;
-  font-size: 16px;
-  color: var(--text-color-oneth);
-  border: 1px solid #ccc;
-}
-
-.bookingForm .input-group input {
-  margin-bottom: 10px;
-}
-
-.bookingForm .sendButton {
-  padding: 12px 24px;
-  background-color: var(--background-color-sixth);
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 50px;
-  font-weight: 500;
-  width: 100%;
-  text-align: center;
-}
-
-.bookingForm .sendButton:hover {
-  background-color: var(--background-color-seventh);
-}
-
-@media (max-width: 768px) {
-  .bookingForm {
-    padding: 20px;
-    max-width: 100%;
-  }
-
-  .bookingForm h2 {
-    font-size: 20px;
-  }
-
-  .bookingForm button,
-  .bookingForm .sendButton {
-    padding: 10px 15px;
-    font-size: 14px;
-  }
+  color: #4caf50;
+  margin-bottom: 2rem;
 }

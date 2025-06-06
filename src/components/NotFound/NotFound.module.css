@@ -1,0 +1,23 @@
+.notFound {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #f2f4f7;
+  font-family: "Inter", sans-serif;
+  text-align: center;
+  padding: 32px;
+}
+
+.message {
+  font-size: 32px;
+  font-weight: 700;
+  color: #101828;
+  margin-bottom: 12px;
+}
+
+.description {
+  font-size: 16px;
+  color: #475467;
+}
