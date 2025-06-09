@@ -30,6 +30,7 @@ const campersSlice = createSlice({
       // Завантаження списку кемперів
       .addCase(fetchCampers.pending, state => {
         state.isLoading = true;
+        state.items = [];
         state.error = null;
         state.status = "loading";
       })

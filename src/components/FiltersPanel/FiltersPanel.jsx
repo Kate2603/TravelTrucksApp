@@ -1,135 +1,102 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCities } from "../../redux/campers/campersThunks";
+import {
+  setLocation,
+  setForm,
+  toggleFeature,
+  resetFilters,
+} from "../../redux/filters/filtersSlice";
 import styles from "./FiltersPanel.module.css";
 
-const FiltersPanel = ({ filters = {}, onFiltersChange = () => {} }) => {
+const Forms = ["panelTruck", "fullyIntegrated", "alcove"];
+const Features = ["airConditioner", "kitchen", "TV", "shower"];
+
+const FiltersPanel = ({ onFilterChange }) => {
   const dispatch = useDispatch();
-  const cities = useSelector(state => state?.campers?.cities) || [];
-  const [suggestions, setSuggestions] = useState([]);
+  const { location, form, features } = useSelector(state => state.filters);
+
+  // Локальний стан для контролю debounce вводу локації
+  const [localLocation, setLocalLocation] = useState(location);
+
+  // Дебаунс оновлення location у Redux
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (localLocation !== location) {
+        dispatch(setLocation(localLocation));
+      }
+    }, 400);
+    return () => clearTimeout(timeout);
+  }, [localLocation, dispatch, location]);
 
   useEffect(() => {
-    dispatch(fetchCities());
-  }, [dispatch]);
+    onFilterChange({ location, form, features });
+  }, [location, form, features, onFilterChange]);
 
-  // Безпечне значення поля location
-  const locationValue =
-    typeof filters.location === "string" ? filters.location : "";
-
-  const handleLocationInput = e => {
-    const value = e.target.value || "";
-    onFiltersChange({ ...filters, location: value });
-
-    if (value.length < 2) {
-      setSuggestions([]);
-      return;
-    }
-
-    const filtered = cities
-      .map(city => city?.name || "")
-      .filter(cityName => cityName.toLowerCase().includes(value.toLowerCase()));
-
-    setSuggestions(filtered.slice(0, 5));
+  const handleFormChange = selectedForm => {
+    dispatch(setForm(selectedForm === form ? "" : selectedForm));
   };
-
-  const handleSuggestionClick = city => {
-    onFiltersChange({ ...filters, location: city });
-    setSuggestions([]);
-  };
-
-  const handleFormChange = e => {
-    const formValue = e.target.value || "";
-    onFiltersChange({ ...filters, form: formValue });
-  };
-
-  // Переконуємось, що features - масив
-  const features = Array.isArray(filters.features) ? filters.features : [];
 
   const handleFeatureToggle = feature => {
-    const newFeatures = features.includes(feature)
-      ? features.filter(f => f !== feature)
-      : [...features, feature];
-    onFiltersChange({ ...filters, features: newFeatures });
+    dispatch(toggleFeature(feature));
   };
 
   const handleReset = () => {
-    onFiltersChange({
-      location: "",
-      form: "",
-      features: [],
-    });
-    setSuggestions([]);
+    dispatch(resetFilters());
   };
 
   return (
-    <div className={styles.filterPanel}>
-      <h3>Filters</h3>
+    <aside className={styles.panel}>
+      <h2 className={styles.title}>Filters</h2>
 
-      <div className={styles.filterGroup}>
-        <label htmlFor="location">Location:</label>
-        <div className={styles.inputWrapper}>
-          <span className={styles.icon}>📍</span>
-          <input
-            id="location"
-            type="text"
-            value={locationValue}
-            onChange={handleLocationInput}
-            placeholder="Enter a city..."
-            aria-label="City"
-            autoComplete="off"
-          />
-          {suggestions.length > 0 && (
-            <ul className={styles.suggestions}>
-              {suggestions.map((s, i) => (
-                <li key={i} onClick={() => handleSuggestionClick(s)}>
-                  {s}
-                </li>
-              ))}
-            </ul>
-          )}
+      <div className={styles.section}>
+        <label htmlFor="location" className={styles.label}>
+          Location
+        </label>
+        <input
+          id="location"
+          type="text"
+          value={localLocation}
+          onChange={e => setLocalLocation(e.target.value)}
+          placeholder="Enter location"
+          className={styles.input}
+        />
+      </div>
+
+      <div className={styles.section}>
+        <p className={styles.label}>Vehicle Type</p>
+        <div className={styles.options}>
+          {Forms.map(item => (
+            <button
+              key={item}
+              className={`${styles.option} ${form === item ? styles.active : ""}`}
+              onClick={() => handleFormChange(item)}
+            >
+              {item}
+            </button>
+          ))}
         </div>
       </div>
 
-      <div className={styles.filterGroup}>
-        <label htmlFor="form">Vehicle type:</label>
-        <select
-          id="form"
-          value={typeof filters.form === "string" ? filters.form : ""}
-          onChange={handleFormChange}
-        >
-          <option value="">All</option>
-          <option value="van">Van</option>
-          <option value="alcove">Alcove</option>
-          <option value="integrated">Integrated</option>
-        </select>
-      </div>
-
-      <div className={styles.filterGroup}>
-        <label>Features:</label>
-        <div className={styles.checkboxGroup}>
-          {[
-            { id: "AC", label: "AC" },
-            { id: "kitchen", label: "Kitchen" },
-            { id: "TV", label: "TV" },
-            { id: "bathroom", label: "Toilet" },
-            { id: "shower", label: "Shower" },
-            { id: "GPS", label: "GPS" },
-          ].map(({ id, label }) => (
-            <label key={id} htmlFor={id}>
+      <div className={styles.section}>
+        <p className={styles.label}>Features</p>
+        <div className={styles.features}>
+          {Features.map(feature => (
+            <label key={feature} className={styles.checkboxLabel}>
               <input
-                id={id}
                 type="checkbox"
-                checked={features.includes(id)}
-                onChange={() => handleFeatureToggle(id)}
+                checked={features.includes(feature)}
+                onChange={() => handleFeatureToggle(feature)}
               />
-              {label}
+              {feature}
             </label>
           ))}
         </div>
       </div>
 
-      <button onClick={handleReset}>Reset filters</button>
-    </div>
+      <button className={styles.resetButton} onClick={handleReset}>
+        Reset
+      </button>
+    </aside>
   );
 };
 

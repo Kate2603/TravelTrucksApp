@@ -1,47 +1,65 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import FiltersPanel from "../../components/FiltersPanel/FiltersPanel";
-
 import CampersCard from "../../components/CampersCard/CampersCard";
 import Loader from "../../components/Loader/Loader";
 import styles from "./Catalog.module.css";
 import { fetchCampers } from "../../redux/campers/campersThunks";
+import { selectFilteredCampers } from "../../redux/campers/campersSlice";
 
 const Catalog = () => {
   const dispatch = useDispatch();
-  const campers = useSelector(state => state.campers.list);
+  const campers = useSelector(selectFilteredCampers);
   const isLoading = useSelector(state => state.campers.isLoading);
-  const isFiltering = useSelector(state => state.campers.isFiltering);
-  const [filters, setFilters] = useState({});
+  const [filters, setFilters] = useState({
+    location: "",
+    form: "",
+    features: [],
+  });
 
   useEffect(() => {
-    dispatch(fetchCampers());
-  }, [dispatch]);
+    const timeout = setTimeout(() => {
+      dispatch(fetchCampers(filters));
+    }, 500); // debounce
+    return () => clearTimeout(timeout);
+  }, [dispatch, filters]);
 
-  const handleFilterChange = newFilters => {
-    setFilters(newFilters);
-    // можливо, тут викликати thunk для фільтрації?
-  };
+  const handleFilterChange = useCallback(newFilters => {
+    setFilters(prevFilters => {
+      if (JSON.stringify(prevFilters) === JSON.stringify(newFilters)) {
+        return prevFilters;
+      }
+      return newFilters;
+    });
+  }, []);
 
   return (
     <div className={styles.catalogPage}>
-      <h1></h1>
+      <div className={styles.filtersWrapper}>
+        <FiltersPanel onFilterChange={handleFilterChange} />
+      </div>
 
-      <FiltersPanel onFilterChange={handleFilterChange} />
-
-      {isLoading || isFiltering ? (
-        <Loader />
-      ) : (
-        <div className={styles.catalogList}>
-          {campers.map(camper => (
-            <CampersCard
-              key={camper._id}
-              camper={camper}
-              className={styles.catalogItem}
-            />
-          ))}
-        </div>
-      )}
+      <div className={styles.catalogListWrapper}>
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <div className={styles.catalogList}>
+            {Array.isArray(campers) && campers.length > 0 ? (
+              campers
+                .slice(0, 4)
+                .map(camper => (
+                  <CampersCard
+                    key={camper._id || camper.id}
+                    camper={camper}
+                    className={styles.catalogItem}
+                  />
+                ))
+            ) : (
+              <p>No campers found.</p>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
