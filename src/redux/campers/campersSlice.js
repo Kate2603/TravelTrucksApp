@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createSelector } from "@reduxjs/toolkit";
 import { fetchCampers, fetchCamperById, fetchCities } from "./campersThunks";
 
 const campersSlice = createSlice({
@@ -12,6 +12,11 @@ const campersSlice = createSlice({
     page: 1,
     hasMore: true,
     cities: [],
+    filters: {
+      location: "",
+      form: "",
+      features: [],
+    },
   },
   reducers: {
     resetCampers: state => {
@@ -24,10 +29,12 @@ const campersSlice = createSlice({
     incrementPage: state => {
       state.page += 1;
     },
+    setFilters: (state, action) => {
+      state.filters = action.payload;
+    },
   },
   extraReducers: builder => {
     builder
-      // Завантаження списку кемперів
       .addCase(fetchCampers.pending, state => {
         state.isLoading = true;
         state.items = [];
@@ -37,9 +44,7 @@ const campersSlice = createSlice({
       .addCase(fetchCampers.fulfilled, (state, action) => {
         state.isLoading = false;
         state.status = "succeeded";
-        // Додаємо нові кемпери до існуючих (для пагінації)
         state.items = state.items.concat(action.payload);
-        // Якщо даних немає, припиняємо пагінацію
         if (action.payload.length === 0) {
           state.hasMore = false;
         }
@@ -49,8 +54,6 @@ const campersSlice = createSlice({
         state.status = "failed";
         state.error = action.payload || action.error.message;
       })
-
-      // Завантаження конкретного кемпера по id
       .addCase(fetchCamperById.pending, state => {
         state.isLoading = true;
         state.error = null;
@@ -67,8 +70,6 @@ const campersSlice = createSlice({
         state.status = "failed";
         state.error = action.payload || action.error.message;
       })
-
-      // Завантаження міст для автодоповнення
       .addCase(fetchCities.pending, state => {
         state.isLoading = true;
         state.error = null;
@@ -87,38 +88,33 @@ const campersSlice = createSlice({
   },
 });
 
-// Експорт ред’юсерів
-export const { resetCampers, incrementPage } = campersSlice.actions;
+export const { resetCampers, incrementPage, setFilters } = campersSlice.actions;
 
-// Селектор для фільтрації кемперів за фільтрами з state.filters
-export const selectFilteredCampers = state => {
-  const campers = state.campers.items || [];
-  const filters = state.filters || { location: "", form: "", features: [] };
+export const selectCampersItems = state => state.campers.items;
+export const selectCampersFilters = state => state.campers.filters;
 
-  return campers.filter(camper => {
-    // Перевірка локації (порожній фільтр = всі)
-    if (filters.location && camper.location !== filters.location) {
-      return false;
-    }
-    // Перевірка форми
-    if (filters.form && camper.form !== filters.form) {
-      return false;
-    }
-    // Перевірка фіч (features - масив рядків)
-    const camperFeatures = Array.isArray(camper.features)
-      ? camper.features
-      : [];
-    if (filters.features.length > 0) {
-      for (const feature of filters.features) {
-        if (!camperFeatures.includes(feature)) {
-          return false;
-        }
-      }
-    }
-    return true;
-  });
-};
+export const selectFilteredCampers = createSelector(
+  [selectCampersItems, selectCampersFilters],
+  (campers, filters) => {
+    return campers.filter(camper => {
+      const matchLocation =
+        !filters.location ||
+        camper.location.toLowerCase().includes(filters.location.toLowerCase());
+
+      const matchForm =
+        !filters.form ||
+        camper.form.toLowerCase() === filters.form.toLowerCase();
+
+      const matchFeatures =
+        !filters.features.length ||
+        filters.features.every(feature => camper[feature]);
+
+      return matchLocation && matchForm && matchFeatures;
+    });
+  }
+);
 
 export const selectIsLoading = state => state.campers.isLoading;
+
 export default campersSlice.reducer;
 export { fetchCampers, fetchCamperById, fetchCities };

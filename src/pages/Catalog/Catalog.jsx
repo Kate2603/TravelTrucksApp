@@ -40,24 +40,22 @@ const Catalog = () => {
       </div>
 
       <div className={styles.catalogListWrapper}>
-        {isLoading ? (
-          <Loader />
-        ) : (
+        {isLoading && <Loader />}
+
+        {!isLoading && Array.isArray(campers) && campers.length > 0 && (
           <div className={styles.catalogList}>
-            {Array.isArray(campers) && campers.length > 0 ? (
-              campers
-                .slice(0, 4)
-                .map(camper => (
-                  <CampersCard
-                    key={camper._id || camper.id}
-                    camper={camper}
-                    className={styles.catalogItem}
-                  />
-                ))
-            ) : (
-              <p>No campers found.</p>
-            )}
+            {campers.slice(0, 4).map(camper => (
+              <CampersCard
+                key={`${camper.id}-${camper.name}`}
+                camper={camper}
+                className={styles.catalogItem}
+              />
+            ))}
           </div>
+        )}
+
+        {!isLoading && (!Array.isArray(campers) || campers.length === 0) && (
+          <p>No campers found.</p>
         )}
       </div>
     </div>

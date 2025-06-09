@@ -1,21 +1,45 @@
 .card {
+  box-sizing: border-box;
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  gap: 24px;
   padding: 24px;
-  width: 888px;
-  background-color: var(--bg-primary);
-  border: 1px solid #dadde1;
+  gap: 24px;
+
+  width: 100%;
+  max-width: 888px;
+  background: var(--bg-primary);
+  border: 1px solid var(--bg-border);
   border-radius: 20px;
+
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+  box-shadow: 0px 1px 3px var(--shadow-color);
 }
 
 .image {
   width: 290px;
   height: 310px;
-  object-fit: cover;
   border-radius: 10px;
+  object-fit: cover;
   flex-shrink: 0;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+  min-width: 0;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
 .name {
@@ -25,48 +49,28 @@
   margin: 0;
 }
 
-.location {
+.priceContainer {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: var(--text-secondary);
-  font-size: 16px;
-}
-
-.icon {
-  width: 16px;
-  height: 16px;
-  fill: #475467;
-  flex-shrink: 0;
-}
-
-.priceContainer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  margin-top: 8px;
 }
 
 .price {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 600;
   color: var(--text-primary);
 }
 
 .favoriteButton {
+  border: none;
+  border-radius: 50%;
+  padding: 8px;
+  background-color: var(--bg-dark);
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 200px;
-  background-color: var(--bg-dark);
-  color: var(--text-inverted);
-  font-weight: 500;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+  justify-content: center;
 }
 
 .favoriteButton:hover {
@@ -74,46 +78,44 @@
 }
 
 .favoriteIcon {
-  width: 20px;
-  height: 20px;
-  fill: currentColor;
+  width: 24px;
+  height: 24px;
+  fill: var(--text-inverted);
 }
 
 .details {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-top: 8px;
-}
-
-.rating {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  background-color: var(--bg-light);
-  color: var(--text-primary);
+  gap: 10px;
   font-size: 16px;
   font-weight: 500;
-  border-radius: 4px;
-  padding: 4px 8px;
+  color: var(--text-secondary);
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+  margin-right: 6px;
 }
 
 .description {
-  font-size: 16px;
-  font-weight: 400;
-  color: var(--text-secondary);
-  margin: 12px 0;
+  font-size: 14px;
   line-height: 1.4;
+  color: var(--text-secondary);
+  margin-top: 16px;
 }
 
 .equipment {
-  margin-top: 8px;
+  margin-top: 16px;
 }
 
 .equipment ul {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 16px;
+  gap: 10px 20px;
   padding: 0;
   margin: 0;
   list-style: none;
@@ -122,26 +124,55 @@
 .equipment li {
   display: flex;
   align-items: center;
-  gap: 8px;
   font-size: 14px;
-  color: var(--text-primary);
+  color: var(--text-secondary);
+}
+
+.equipment li svg {
+  margin-right: 6px;
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
 }
 
 .showMoreButton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 16px;
-  padding: 16px 60px;
-  background-color: var(--bg-element);
-  color: var(--bg-primary);
+  margin-top: 24px;
+  padding: 12px 24px;
+  border: none;
   border-radius: 200px;
+  background-color: var(--bg-element);
+  color: var(--text-inverted);
   font-size: 16px;
   font-weight: 500;
   text-decoration: none;
-  transition: background-color 0.3s ease;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  width: fit-content;
 }
 
 .showMoreButton:hover {
   background-color: var(--bg-element-hover);
+}
+
+/* Responsive: tablet/mobile */
+@media (max-width: 768px) {
+  .card {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .image {
+    width: 100%;
+    height: auto;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .priceContainer {
+    justify-content: space-between;
+    width: 100%;
+  }
 }

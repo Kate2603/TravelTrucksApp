@@ -2,7 +2,7 @@
   display: flex;
   gap: 32px;
   padding: 32px;
-  background-color: var(--bg-secondary);
+  background-color: var(--bg-primary);
   min-height: 100vh;
   font-family: "Inter", sans-serif;
   color: var(--text-primary);
@@ -26,8 +26,6 @@
 
 .catalogItem {
   background-color: var(--bg-primary);
-  border-radius: 12px;
-  box-shadow: 0 2px 12px var(--shadow-color);
   padding: 16px;
   display: flex;
   flex-direction: column;

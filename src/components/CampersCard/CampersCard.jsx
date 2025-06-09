@@ -5,6 +5,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { toggleFavorite } from "../../redux/favorites/favoritesSlice";
 import styles from "./CampersCard.module.css";
 
+const FEATURES = [
+  { key: "airConditioner", label: "AC", icon: "icon-wind" },
+  { key: "bathroom", label: "Bathroom", icon: "icon-shower" },
+  { key: "kitchen", label: "Kitchen", icon: "icon-cup-hot" },
+  { key: "tv", label: "TV", icon: "icon-tv" },
+  { key: "radio", label: "Radio", icon: "icon-ui-radios" },
+  { key: "refrigerator", label: "Fridge", icon: "icon-fridge" },
+  { key: "microwave", label: "Microwave", icon: "icon-microwave" },
+  { key: "gasStove", label: "Gas Stove", icon: "icon-gas-stove" },
+  { key: "water", label: "Water", icon: "ion_water-outline" },
+];
+
 const CampersCard = ({ camper }) => {
   const {
     id,
@@ -38,92 +50,88 @@ const CampersCard = ({ camper }) => {
     if (price === undefined || price === null) {
       return "Ціна недоступна";
     }
-    return price.toLocaleString("uk-UA", {
+    return price.toLocaleString("en-EN", {
       style: "currency",
-      currency: "UAH",
+      currency: "EUR",
+      minimumFractionDigits: 2,
     });
   };
 
-  const equipmentList = [
-    { label: "AC", value: airConditioner, icon: "icon-ac" },
-    { label: "Bathroom", value: bathroom, icon: "icon-bathroom" },
-    { label: "Kitchen", value: kitchen, icon: "icon-kitchen" },
-    { label: "TV", value: tv, icon: "icon-tv" },
-    { label: "Radio", value: radio, icon: "icon-radio" },
-    { label: "Refrigerator", value: refrigerator, icon: "icon-refrigerator" },
-    { label: "Microwave", value: microwave, icon: "icon-microwave" },
-    { label: "Gas", value: gasStove, icon: "icon-gas" },
-    { label: "Water", value: water, icon: "icon-water" },
-  ];
-
   return (
     <div className={styles.card}>
-      <img
-        src={image}
-        alt={name}
-        className={styles.image}
-        onError={e => {
-          e.target.onerror = null;
-          e.target.src = "/img/placeholder.jpg";
-        }}
-      />
+      <div className={styles.row}>
+        <img
+          src={image}
+          alt={name}
+          className={styles.image}
+          onError={e => {
+            e.target.onerror = null;
+            e.target.src = "/img/placeholder.jpg";
+          }}
+        />
 
-      <h3 className={styles.name}>{name}</h3>
+        <div className={styles.content}>
+          <div className={styles.header}>
+            <h3 className={styles.name}>{name}</h3>
+            <p className={styles.price}>{formatPrice(price)}</p>
+          </div>
 
-      <p className={styles.location}>
-        <svg className={styles.icon}>
-          <use href="/img/sprite.svg#icon-location" />
-        </svg>
-        {location}
-      </p>
+          <div className={styles.subinfo}>
+            <span className={styles.rating}>
+              <svg className={styles.icon}>
+                <use href="/sprite.svg#icon-star" />
+              </svg>
+              {rating
+                ? `${rating.toFixed(1)} (${reviewsCount || 0} Reviews)`
+                : "No Rating"}
+            </span>
 
-      <div className={styles.priceContainer}>
-        <p className={styles.price}>{formatPrice(price)}</p>
-        <button
-          onClick={handleToggleFavorite}
-          className={styles.favoriteButton}
-          style={{ backgroundColor: isFavorite ? "#E44848" : "#101828" }}
-          aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
-        >
-          {isFavorite ? "Видалити з обраного" : "Додати до обраного"}
-          <svg className={styles.favoriteIcon}>
-            <use href="/img/sprite.svg#icon-heart" />
-          </svg>
-        </button>
+            <span className={styles.location}>
+              <svg className={styles.icon}>
+                <use href="/sprite.svg#icon-location" />
+              </svg>
+              {location}
+            </span>
+          </div>
+
+          <p className={styles.description}>{description}</p>
+
+          <div className={styles.equipment}>
+            <h4 className={styles.equipmentTitle}>Vehicle Equipment</h4>
+            <ul className={styles.featuresList}>
+              {FEATURES.map(({ key, label, icon }) => {
+                if (!camper[key]) return null;
+                return (
+                  <li key={key} className={styles.featureItem}>
+                    <svg className={styles.featureIcon}>
+                      <use href={`/sprite.svg#${icon}`} />
+                    </svg>
+                    <span>{label}</span>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+
+          <div className={styles.footer}>
+            <Link to={`/catalog/${id}`} className={styles.showMoreButton}>
+              Show More
+            </Link>
+            <button
+              onClick={handleToggleFavorite}
+              className={styles.favoriteButton}
+              style={{ backgroundColor: isFavorite ? "#E44848" : "#101828" }}
+              aria-label={
+                isFavorite ? "Remove from favorites" : "Add to favorites"
+              }
+            >
+              <svg className={styles.favoriteIcon}>
+                <use href="/sprite.svg#icon-heart" />
+              </svg>
+            </button>
+          </div>
+        </div>
       </div>
-
-      <div className={styles.details}>
-        <span className={styles.rating}>
-          <svg
-            className={styles.icon}
-            style={{ fill: rating ? "#ffc531" : "#F2F4F7" }}
-          >
-            <use href="/img/sprite.svg#icon-star" />
-          </svg>
-          {rating ? `${rating} (${reviewsCount || 0} Reviews)` : "No Rating"}
-        </span>
-      </div>
-
-      <p className={styles.description}>{description}</p>
-
-      <div className={styles.equipment}>
-        <ul>
-          {equipmentList
-            .filter(item => item.value)
-            .map(({ label, icon }) => (
-              <li key={label}>
-                <svg className={styles.icon}>
-                  <use href={`/img/sprite.svg#${icon}`} />
-                </svg>{" "}
-                {label}
-              </li>
-            ))}
-        </ul>
-      </div>
-
-      <Link to={`/catalog/${id}`} className={styles.showMoreButton}>
-        Show More
-      </Link>
     </div>
   );
 };
