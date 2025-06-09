@@ -9,8 +9,41 @@
   --bg-secondary: #f7f7f7;
   --bg-light: #f2f4f7;
   --bg-border: #dadde1;
-  --bg-warning: #ffc531;
-  --bg-error: #e44848;
-  --bg-error-dark: #d84343;
+  --bg-star: #ffc531;
+  --bg-element: #e44848;
+  --bg-element-hover: #d84343;
   --bg-dark: #101828;
+
+  --shadow-color: rgba(16, 24, 40, 0.1);
+}
+
+/* Global container */
+.container {
+  width: 100vw;
+  max-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+/* Tablet */
+@media only screen and (min-width: 768px) {
+  .container {
+    max-width: 768px;
+    padding: 0 32px;
+  }
+}
+
+/* Desktop */
+@media only screen and (min-width: 1440px) {
+  .container {
+    max-width: 1440px;
+  }
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }

@@ -1,13 +1,12 @@
-import React, { useEffect, useMemo, lazy, Suspense } from "react";
+import React, { lazy, Suspense, useEffect, useMemo } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Provider, useSelector } from "react-redux";
 import { store } from "./redux/store";
 import { selectFavorites } from "./redux/favorites/favoritesSlice";
-import Header from "./components/Header/Header";
 import Loader from "./components/Loader/Loader";
+import Header from "./components/Header/Header";
 import "./App.css";
 
-// ✅ Lazy-loaded сторінки
 const Home = lazy(() => import("./pages/Home/Home"));
 const Catalog = lazy(() => import("./pages/Catalog/Catalog"));
 const CamperDetailsPage = lazy(
@@ -42,14 +41,15 @@ const AppContent = React.memo(() => {
   );
 });
 
-function App() {
-  return (
-    <Provider store={store}>
-      <Router>
+const App = () => (
+  <Provider store={store}>
+    <Router>
+      <div>
+        {" "}
         <AppContent />
-      </Router>
-    </Provider>
-  );
-}
+      </div>
+    </Router>
+  </Provider>
+);
 
 export default App;

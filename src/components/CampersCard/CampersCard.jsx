@@ -35,7 +35,13 @@ const CampersCard = ({ camper }) => {
   };
 
   const formatPrice = price => {
-    return price.toLocaleString("en-US", { minimumFractionDigits: 2 });
+    if (price === undefined || price === null) {
+      return "Ціна недоступна";
+    }
+    return price.toLocaleString("uk-UA", {
+      style: "currency",
+      currency: "UAH",
+    });
   };
 
   const equipmentList = [
@@ -72,7 +78,7 @@ const CampersCard = ({ camper }) => {
       </p>
 
       <div className={styles.priceContainer}>
-        <p className={styles.price}>${formatPrice(price)}</p>
+        <p className={styles.price}>{formatPrice(price)}</p>
         <button
           onClick={handleToggleFavorite}
           className={styles.favoriteButton}
@@ -124,9 +130,9 @@ const CampersCard = ({ camper }) => {
 
 CampersCard.propTypes = {
   camper: PropTypes.shape({
-    id: PropTypes.number.isRequired,
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     name: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
+    price: PropTypes.number,
     location: PropTypes.string.isRequired,
     rating: PropTypes.number,
     reviewsCount: PropTypes.number,

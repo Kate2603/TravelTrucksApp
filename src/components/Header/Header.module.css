@@ -1,47 +1,83 @@
 .header {
+  background-color: var(--bg-primary);
+  padding: 24px 0;
+  padding-left: 64px;
+  border-bottom: 1px solid var(--bg-border);
+}
+
+.inner {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 64px;
-  padding: 0 32px;
-  background-color: #ffffff;
+  justify-content: start;
+  align-items: start;
+  gap: 450px;
 }
 
 .logoLink {
   text-decoration: none;
   font-family: "Inter", sans-serif;
   font-weight: 700;
-  font-size: 24px;
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
   line-height: 1.2;
+  color: var(--text-primary);
 }
 
 .travel {
-  color: #101828;
+  color: var(--text-primary);
 }
 
 .truck {
-  color: #ffc531;
+  color: var(--text-secondary);
 }
 
 .menu {
   display: flex;
-  gap: 24px;
+  gap: 32px;
 }
 
 .menuItem {
-  color: #475467;
+  color: var(--text-secondary);
   font-family: "Inter", sans-serif;
   font-weight: 500;
-  font-size: 16px;
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
   text-decoration: none;
-  padding-bottom: 4px;
+  transition: color 0.2s ease-in-out;
 }
 
 .menuItem:hover {
-  color: #101828;
+  color: var(--bg-element-hover);
 }
 
 .active {
-  color: #101828;
-  border-bottom: 2px solid #101828;
+  color: var(--bg-element-hover);
+}
+
+/* Tablet */
+@media only screen and (max-width: 768px) {
+  .inner {
+    gap: 32px;
+    padding: 0 32px;
+  }
+
+  .menu {
+    gap: 12px;
+  }
+}
+
+/* Mobile */
+@media only screen and (max-width: 480px) {
+  .inner {
+    flex-direction: column;
+    height: auto;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    gap: 8px;
+  }
+
+  .menu {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
 }

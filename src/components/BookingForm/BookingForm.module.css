@@ -2,12 +2,12 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
-  background-color: #ffffff;
+  background-color: var(--bg-primary);
   padding: 40px;
   border-radius: 20px;
   box-shadow: 0px 4px 16px rgba(17, 17, 17, 0.1);
   font-family: "Inter", sans-serif;
-  color: #101828;
+  color: var(--text-primary);
   max-width: 600px;
   width: 100%;
   margin: 0 auto;
@@ -21,7 +21,7 @@
 
 .bookingForm p {
   font-size: 16px;
-  color: #475467;
+  color: var(--text-secondary);
   margin-bottom: 24px;
 }
 
@@ -34,17 +34,17 @@
 .inputGroup label {
   font-size: 14px;
   font-weight: 500;
-  color: #344054;
+  color: var(--text-secondary);
 }
 
 .inputGroup input,
 .inputGroup textarea {
   padding: 12px 16px;
-  border: 1px solid #d0d5dd;
+  border: 1px solid #dadde1;
   border-radius: 12px;
   font-size: 16px;
-  color: #101828;
-  background-color: #f9fafb;
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
   transition:
     border 0.2s ease,
     box-shadow 0.2s ease;
@@ -53,26 +53,26 @@
 .inputGroup input:focus,
 .inputGroup textarea:focus {
   outline: none;
-  border-color: #1e90ff;
+  border-color: var(--bg-element);
   box-shadow: 0 0 0 4px rgba(30, 144, 255, 0.1);
-  background-color: #ffffff;
+  background-color: var(--bg-primary);
 }
 
 .inputGroup input[aria-invalid="true"],
 .inputGroup textarea[aria-invalid="true"] {
-  border-color: #f04438;
-  background-color: #fff5f5;
+  border-color: var(--bg-element);
+  background-color: var(--bg-light);
 }
 
 .error {
-  color: #f04438;
+  color: var(--text-error);
   font-size: 14px;
   margin-top: 4px;
 }
 
 .bookingForm button {
   align-self: flex-start;
-  background-color: #1e90ff;
+  background-color: var(--bg-element);
   color: white;
   padding: 12px 24px;
   font-size: 16px;
@@ -86,38 +86,38 @@
 }
 
 .bookingForm button:hover {
-  background-color: #1574cc;
+  background-color: var(--bg-element-hover);
   transform: translateY(-1px);
 }
 
 .bookingForm button:disabled {
-  background-color: #b3d4f5;
+  background-color: var(--text-muted);
   cursor: not-allowed;
 }
 
 .successMessage {
-  background-color: #ecfdf3;
+  background-color: var(--bg-secondary);
   padding: 32px;
   border-radius: 16px;
   text-align: center;
-  border: 1px solid #12b76a;
+  border: 1px solid var(--bg-element);
 }
 
 .successMessage h3 {
   font-size: 20px;
-  color: #027a48;
+  color: var(--text-secondary);
   margin-bottom: 8px;
 }
 
 .successMessage p {
   font-size: 16px;
-  color: #344054;
+  color: var(--text-muted);
   margin-bottom: 16px;
 }
 
 .successMessage button {
-  background-color: #12b76a;
-  color: white;
+  background-color: var(--bg-element);
+  color: var(--text-inverted);
   padding: 10px 20px;
   font-size: 16px;
   font-weight: 600;
@@ -128,5 +128,5 @@
 }
 
 .successMessage button:hover {
-  background-color: #0e9f58;
+  background-color: var(--bg-element-hover);
 }

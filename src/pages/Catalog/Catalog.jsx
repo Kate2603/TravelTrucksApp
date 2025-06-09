@@ -1,36 +1,30 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchCampers,
-  selectIsLoading,
-} from "../../redux/campers/campersSlice";
-import { selectFilteredCampers } from "../../redux/selectors";
-import CampersCard from "../../components/CampersCard/CampersCard";
-import FiltersPanel from "../../components/FiltersPanel/FiltersPanel";
-
+import FiltersPanel from ".";
+import CampersCard from "./components/CampersCard/CampersCard";
+import Loader from "./components/Loader/Loader";
 import styles from "./Catalog.module.css";
-import Loader from "../../components/Loader/Loader";
+import { fetchCampers } from "../redux/campers/campersThunks";
 
 const Catalog = () => {
   const dispatch = useDispatch();
-  const campers = useSelector(selectFilteredCampers);
-  const isLoading = useSelector(selectIsLoading);
-
-  const [isFiltering, setIsFiltering] = useState(false);
+  const campers = useSelector(state => state.campers.list);
+  const isLoading = useSelector(state => state.campers.isLoading);
+  const isFiltering = useSelector(state => state.campers.isFiltering);
+  const [filters, setFilters] = useState({});
 
   useEffect(() => {
     dispatch(fetchCampers());
   }, [dispatch]);
 
-  const handleFilterChange = async () => {
-    setIsFiltering(true);
-    await new Promise(resolve => setTimeout(resolve, 500));
-    setIsFiltering(false);
+  const handleFilterChange = newFilters => {
+    setFilters(newFilters);
+    // можливо, тут викликати thunk для фільтрації?
   };
 
   return (
     <div className={styles.catalogPage}>
-      <h1>Available Campers</h1>
+      <h1></h1>
 
       <FiltersPanel onFilterChange={handleFilterChange} />
 

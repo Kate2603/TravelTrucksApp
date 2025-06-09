@@ -1,38 +1,41 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API_URL = "https://66b1f8e71ca8ad33d4f5f63e.mockapi.io/campers";
-
+// Фетчимо кемпери
 export const fetchCampers = createAsyncThunk(
   "campers/fetchCampers",
-  async (
-    { page = 1, limit = 4, location = "", form = "", features = [] },
-    { rejectWithValue }
-  ) => {
+  async (_, thunkAPI) => {
     try {
-      const params = new URLSearchParams();
-      if (location) params.append("location", location);
-      if (form) params.append("form", form);
-      if (features.length > 0) params.append("features", features.join(","));
-      params.append("page", page);
-      params.append("limit", limit);
-
-      const res = await axios.get(`${API_URL}?${params.toString()}`);
-      return res.data || [];
+      const response = await axios.get("/api/campers");
+      return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || error.message);
+      return thunkAPI.rejectWithValue(error.message);
     }
   }
 );
 
+// Фетчимо одного кемпера за id
 export const fetchCamperById = createAsyncThunk(
   "campers/fetchCamperById",
-  async (id, { rejectWithValue }) => {
+  async (id, thunkAPI) => {
     try {
-      const res = await axios.get(`${API_URL}/${id}`);
-      return res.data;
+      const response = await axios.get(`/api/campers/${id}`);
+      return response.data;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  }
+);
+
+// Фетчимо список міст для автодоповнення
+export const fetchCities = createAsyncThunk(
+  "campers/fetchCities",
+  async (_, thunkAPI) => {
+    try {
+      const response = await axios.get("/api/cities");
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
     }
   }
 );

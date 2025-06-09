@@ -1,61 +1,63 @@
 .hero {
-  background-color: #f2f4f7;
-  padding: 64px 32px;
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: -webkit-image-set(
+    url("../../img/Hero@1x.png") 1x,
+    url("../../img/Hero@2x.png") 2x
+  );
+  background-image: image-set(
+    url("../../img/Hero@1x.png") 1x,
+    url("../../img/Hero@2x.png") 2x
+  );
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  overflow: hidden;
 }
 
-.container {
-  max-width: 1280px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 32px;
-  flex-wrap: wrap;
-}
+/* .overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(16, 24, 40, 0.5);
+  z-index: 1;
+} */
 
 .content {
-  max-width: 480px;
+  position: relative;
+  z-index: 2;
+  text-align: start;
+  color: var(--text-inverted);
+  max-width: 960px;
+  padding-left: 64px;
 }
 
-.h1 {
-  font-family: "Inter", sans-serif;
-  font-size: 40px;
+.content h1 {
+  font-size: clamp(2rem, 6vw, 4rem);
   font-weight: 700;
-  line-height: 1.2;
-  color: #101828;
-  margin-bottom: 16px;
+  margin-bottom: 1rem;
 }
 
-.p {
-  font-family: "Inter", sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.5;
-  color: #475467;
-  margin-bottom: 32px;
+.content p {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  margin-bottom: 2rem;
 }
 
-.button {
-  background-color: #ffc531;
-  color: #101828;
-  font-family: "Inter", sans-serif;
+.content button {
+  background-color: var(--bg-element);
+  color: var(--text-inverted);
+  font-size: 1rem;
   font-weight: 600;
-  font-size: 14px;
   padding: 12px 24px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  box-shadow: 0px 0px 0px 4px rgba(255, 197, 49, 0.24);
-  transition: background-color 0.2s ease-in-out;
+  transition: background-color 0.2s;
 }
 
-.button:hover {
-  background-color: #e6b326;
-}
-
-.image {
-  width: 720px;
-  height: 360px;
-  border-radius: 16px;
-  object-fit: cover;
+.content button:hover {
+  background-color: var(--bg-element-hover);
 }
