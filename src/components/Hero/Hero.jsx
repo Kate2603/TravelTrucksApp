@@ -20,19 +20,24 @@ const Hero = () => {
 
   return (
     <section className={styles.hero}>
-      <div className={styles.content}>
-        <h1 className={styles.h1}>Campers of your dreams</h1>
-        <p className={styles.p}>
-          You can find everything you want in our catalog
-        </p>
-        <button className={styles.button} onClick={handleClick}>
-          View Now
-        </button>
+      <div className={styles.container}>
+        <div className={styles.content}>
+          <h1 className={styles.h1}>Campers of your dreams</h1>
+          <p className={styles.p}>
+            You can find everything you want in our catalog
+          </p>
+          <button className={styles.button} onClick={handleClick}>
+            View Now
+          </button>
+        </div>
+        <img
+          src={heroImage}
+          alt="Hero camper"
+          className={styles.image}
+          width={720}
+          height={360}
+        />
       </div>
-      <div
-        className={styles.image}
-        style={{ backgroundImage: `url(${heroImage})` }}
-      ></div>
     </section>
   );
 };

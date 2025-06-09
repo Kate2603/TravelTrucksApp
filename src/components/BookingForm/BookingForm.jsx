@@ -3,7 +3,6 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import styles from "./BookingForm.module.css";
 
-// Повторно використовуваний компонент введення
 const TextInput = ({ id, type = "text", formik, placeholder, label }) => (
   <div className={styles.inputGroup}>
     <label htmlFor={id}>{label}</label>

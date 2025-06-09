@@ -2,19 +2,18 @@ import React, { useEffect, useMemo, lazy, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Provider, useSelector } from "react-redux";
 import { store } from "./redux/store";
-import { selectFavorites } from "./redux/favoritesSlice";
-
+import { selectFavorites } from "./redux/favorites/favoritesSlice";
 import Header from "./components/Header/Header";
 import Loader from "./components/Loader/Loader";
 import "./App.css";
 
-// Lazy-loaded pages
+// ✅ Lazy-loaded сторінки
 const Home = lazy(() => import("./pages/Home/Home"));
 const Catalog = lazy(() => import("./pages/Catalog/Catalog"));
 const CamperDetailsPage = lazy(
   () => import("./pages/CamperDetailsPage/CamperDetailsPage")
 );
-const NotFound = lazy(() => import("./components/NotFound/NotFound"));
+const NotFound = lazy(() => import("./pages/NotFound/NotFound"));
 
 const AppContent = React.memo(() => {
   const favorites = useSelector(selectFavorites);

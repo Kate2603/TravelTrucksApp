@@ -5,7 +5,7 @@ import {
   setForm,
   toggleFeature,
   resetFilters,
-} from "../../redux/campers/campersSlice";
+} from "../../redux/filters/filtersSlice";
 import { useSearchParams } from "react-router-dom";
 import styles from "./FiltersPanel.module.css";
 
@@ -15,7 +15,7 @@ const FilterPanel = ({ onFilterChange }) => {
   const [, setSearchParams] = useSearchParams();
   const [suggestions, setSuggestions] = useState([]);
 
-  // Геолокація
+  // Geolocation
   useEffect(() => {
     if (!filters.location) {
       navigator.geolocation.getCurrentPosition(async pos => {
@@ -34,7 +34,7 @@ const FilterPanel = ({ onFilterChange }) => {
     }
   }, []);
 
-  // Синхронізація URL
+  // URL synchronization
   useEffect(() => {
     const params = {};
     if (filters.location) params.location = filters.location;
@@ -44,7 +44,7 @@ const FilterPanel = ({ onFilterChange }) => {
     setSearchParams(params);
   }, [filters]);
 
-  // Автопідказки міст
+  // City autocomplete suggestions
   const handleLocationInput = async e => {
     const value = e.target.value;
     dispatch(setLocation(value));
@@ -82,59 +82,72 @@ const FilterPanel = ({ onFilterChange }) => {
 
   return (
     <div className={styles.filterPanel}>
-      <h3>Фільтри</h3>
+      <h3>Filters</h3>
 
-      {/* Локація */}
+      {/* Location */}
       <div className={styles.filterGroup}>
-        <label>Локація:</label>
-        <input
-          type="text"
-          value={filters.location}
-          onChange={handleLocationInput}
-          placeholder="Введіть місто..."
-        />
-        {suggestions.length > 0 && (
-          <ul className={styles.suggestions}>
-            {suggestions.map((s, i) => (
-              <li key={i} onClick={() => handleSuggestionClick(s)}>
-                {s}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-
-      {/* Тип кемпера */}
-      <div className={styles.filterGroup}>
-        <label>Тип кемпера:</label>
-        <select value={filters.form} onChange={handleFormChange}>
-          <option value="">Усі</option>
-          <option value="van">Фургон</option>
-          <option value="alcove">Альков</option>
-          <option value="integrated">Інтегрований</option>
-        </select>
-      </div>
-
-      {/* Особливості */}
-      <div className={styles.filterGroup}>
-        <label>Особливості:</label>
-        <div className={styles.checkboxGroup}>
-          {["airConditioner", "kitchen", "tv", "toilet", "shower", "gps"].map(
-            feature => (
-              <label key={feature}>
-                <input
-                  type="checkbox"
-                  checked={filters.features.includes(feature)}
-                  onChange={() => handleFeatureToggle(feature)}
-                />
-                {feature}
-              </label>
-            )
+        <label htmlFor="location">Location:</label>
+        <div className={styles.inputWrapper}>
+          <span className={styles.icon}>📍</span>
+          <input
+            id="location"
+            type="text"
+            value={filters.location}
+            onChange={handleLocationInput}
+            placeholder="Enter a city..."
+            aria-label="City"
+          />
+          {suggestions.length > 0 && (
+            <ul className={styles.suggestions}>
+              {suggestions.map((s, i) => (
+                <li key={i} onClick={() => handleSuggestionClick(s)}>
+                  {s}
+                </li>
+              ))}
+            </ul>
           )}
         </div>
       </div>
 
-      <button onClick={handleReset}>Скинути фільтри</button>
+      {/* Camper type */}
+      <div className={styles.filterGroup}>
+        <label htmlFor="form">Vehicle type:</label>
+        <div className={styles.selectWrapper}>
+          <select id="form" value={filters.form} onChange={handleFormChange}>
+            <option value="">All</option>
+            <option value="van">Van</option>
+            <option value="alcove">Alcove</option>
+            <option value="integrated">Integrated</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Features */}
+      <div className={styles.filterGroup}>
+        <label>Features:</label>
+        <div className={styles.checkboxGroup}>
+          {[
+            { id: "airConditioner", label: "AC" },
+            { id: "kitchen", label: "Kitchen" },
+            { id: "tv", label: "TV" },
+            { id: "toilet", label: "Toilet" },
+            { id: "shower", label: "Shower" },
+            { id: "gps", label: "GPS" },
+          ].map(({ id, label }) => (
+            <label key={id} htmlFor={id}>
+              <input
+                id={id}
+                type="checkbox"
+                checked={filters.features.includes(id)}
+                onChange={() => handleFeatureToggle(id)}
+              />
+              {label}
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <button onClick={handleReset}>Reset filters</button>
     </div>
   );
 };

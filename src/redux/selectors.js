@@ -16,6 +16,16 @@ export const selectFilteredCampers = createSelector(
       if (filters.location && camper.location !== filters.location) {
         return false;
       }
+      if (filters.form && camper.form !== filters.form) {
+        return false;
+      }
+      if (filters.features.length > 0) {
+        for (const feature of filters.features) {
+          if (!camper.features.includes(feature)) {
+            return false;
+          }
+        }
+      }
       return true;
     });
   }

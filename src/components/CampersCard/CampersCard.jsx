@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleFavorite } from "../../redux/favoritesSlice.js";
+import { toggleFavorite } from "../../redux/favorites/favoritesSlice";
 import styles from "./CampersCard.module.css";
 
 const CampersCard = ({ camper }) => {

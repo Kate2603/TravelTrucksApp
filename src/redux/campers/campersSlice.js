@@ -42,4 +42,7 @@ const campersSlice = createSlice({
 });
 
 export const { resetCampers, incrementPage } = campersSlice.actions;
+
+export const selectIsLoading = state => state.campers.status === "loading";
+
 export default campersSlice.reducer;

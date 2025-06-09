@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { fetchCamperById } from "../../redux/campers/campersSlice";
+import { fetchCamperById } from "../../redux/campers/campersThunks";
 import styles from "./CamperDetailsPage.module.css";
 import Loader from "../../components/Loader/Loader";
 
@@ -26,9 +26,9 @@ export default function CamperDetailsPage() {
     e.preventDefault();
     setIsBooking(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000)); // імітація API
+      await new Promise(resolve => setTimeout(resolve, 2000));
       alert("Booking successful!");
-    } catch (error) {
+    } catch {
       alert("Booking failed!");
     } finally {
       setIsBooking(false);
@@ -41,14 +41,19 @@ export default function CamperDetailsPage() {
 
   return (
     <div className={styles.wrapper}>
-      <h1>{camper.name}</h1>
-      <p>
-        Price:{" "}
-        {Number(camper.price).toLocaleString("en-US", {
-          minimumFractionDigits: 2,
-        })}
-        ₴
-      </p>
+      <div className={styles.header}>
+        <h1 className={styles.title}>{camper.name}</h1>
+        <div className={styles.meta}>
+          <span className={styles.price}>
+            ₴
+            {Number(camper.price).toLocaleString("en-US", {
+              minimumFractionDigits: 2,
+            })}
+            <span className={styles.per}>/ per day</span>
+          </span>
+          <span className={styles.location}>{camper.location}</span>
+        </div>
+      </div>
 
       <div className={styles.gallery}>
         {camper.gallery?.map((img, i) => (
@@ -59,6 +64,7 @@ export default function CamperDetailsPage() {
               alt={`${camper.name}-${i}`}
               onLoad={() => handleImageLoad(i)}
               style={{ display: loadedImages[i] ? "block" : "none" }}
+              className={styles.image}
             />
           </div>
         ))}
@@ -66,7 +72,7 @@ export default function CamperDetailsPage() {
 
       <div className={styles.features}>
         <h2>Features</h2>
-        <ul>
+        <ul className={styles.featuresList}>
           {[
             "AC",
             "kitchen",
@@ -75,14 +81,10 @@ export default function CamperDetailsPage() {
             "refrigerator",
             "microwave",
             "bathroom",
-            "gas",
-            "water",
-            "transmission",
-            "engine",
           ].map(key =>
             camper[key] ? (
-              <li key={key}>
-                {key}: {camper[key]}
+              <li key={key} className={styles.featureItem}>
+                {key}
               </li>
             ) : null
           )}
@@ -91,12 +93,12 @@ export default function CamperDetailsPage() {
 
       <div className={styles.details}>
         <h2>Details</h2>
-        <ul>
+        <ul className={styles.detailsGrid}>
           {["form", "length", "width", "height", "tank", "consumption"].map(
             key =>
               camper.details?.[key] ? (
                 <li key={key}>
-                  {key}: {camper.details[key]}
+                  <strong>{key}:</strong> {camper.details[key]}
                 </li>
               ) : null
           )}
@@ -105,10 +107,13 @@ export default function CamperDetailsPage() {
 
       <div className={styles.reviews}>
         <h2>Reviews</h2>
-        <ul>
-          {(camper.reviews || []).map((r, i) => (
-            <li key={i}>
-              <strong>{r.reviewer_name}</strong> - {r.comment} ⭐{r.rating}
+        <ul className={styles.reviewList}>
+          {camper.reviews?.map((r, i) => (
+            <li key={i} className={styles.reviewItem}>
+              <div className={styles.reviewer}>
+                <strong>{r.reviewer_name}</strong> ⭐{r.rating}
+              </div>
+              <p>{r.comment}</p>
             </li>
           ))}
         </ul>
@@ -119,15 +124,9 @@ export default function CamperDetailsPage() {
         {isBooking ? (
           <Loader />
         ) : (
-          <form onSubmit={handleBooking}>
-            <label>
-              Name:
-              <input type="text" required />
-            </label>
-            <label>
-              Phone:
-              <input type="tel" required />
-            </label>
+          <form onSubmit={handleBooking} className={styles.form}>
+            <input type="text" placeholder="Name" required />
+            <input type="tel" placeholder="Phone" required />
             <button type="submit">Book now</button>
           </form>
         )}
