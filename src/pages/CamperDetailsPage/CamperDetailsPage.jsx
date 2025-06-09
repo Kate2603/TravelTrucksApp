@@ -1,4 +1,3 @@
-// CamperDetailsPage.jsx
 import { useEffect, useState, lazy, Suspense, memo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -29,9 +28,12 @@ const Gallery = memo(({ images, camperName }) => {
     setLoadedImages(prev => ({ ...prev, [index]: true }));
   };
 
+  if (!images || images.length === 0)
+    return <p className={styles.noImages}>No images available.</p>;
+
   return (
     <div className={styles.gallery}>
-      {images?.map((img, i) => (
+      {images.map((img, i) => (
         <div key={i} className={styles.imageWrapper}>
           <img
             loading="lazy"
@@ -40,7 +42,7 @@ const Gallery = memo(({ images, camperName }) => {
             onLoad={() => handleImageLoad(i)}
             style={{
               opacity: loadedImages[i] ? 1 : 0,
-              transition: "opacity 0.3s",
+              transition: "opacity 0.3s ease-in-out",
             }}
             className={styles.image}
           />
@@ -59,7 +61,7 @@ const FeaturesBlock = memo(({ camper }) => (
           ({ key, label, icon }) =>
             camper[key] && (
               <li key={key} className={styles.featureItem}>
-                <svg className={styles.icon}>
+                <svg className={styles.icon} aria-hidden="true">
                   <use href={`/sprite.svg#${icon}`} />
                 </svg>
                 {label}
@@ -112,7 +114,7 @@ export default function CamperDetailsPage() {
   }, [dispatch, id]);
 
   if (isLoading) return <Loader />;
-  if (error) return <p>Error: {error}</p>;
+  if (error) return <p className={styles.error}>Error: {error}</p>;
   if (!camper) return null;
 
   return (
@@ -142,12 +144,18 @@ export default function CamperDetailsPage() {
         <span
           className={`${styles.tab} ${activeTab === "features" ? styles.activeTab : ""}`}
           onClick={() => setActiveTab("features")}
+          role="button"
+          tabIndex={0}
+          onKeyDown={e => e.key === "Enter" && setActiveTab("features")}
         >
           Features
         </span>
         <span
           className={`${styles.tab} ${activeTab === "reviews" ? styles.activeTab : ""}`}
           onClick={() => setActiveTab("reviews")}
+          role="button"
+          tabIndex={0}
+          onKeyDown={e => e.key === "Enter" && setActiveTab("reviews")}
         >
           Reviews
         </span>

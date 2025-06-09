@@ -45,7 +45,7 @@
 .priceAndFavorite {
   display: flex;
   align-items: center;
-  gap: 8px; /* відстань між ціною і кнопкою */
+  gap: 8px;
 }
 
 .price {
