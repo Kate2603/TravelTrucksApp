@@ -14,6 +14,26 @@ const CamperDetailsPage = lazy(
 );
 const NotFound = lazy(() => import("./pages/NotFound/NotFound"));
 
+// Error Boundary для безпечного відлову помилок
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  componentDidCatch(error, info) {
+    console.error("ErrorBoundary caught an error:", error, info);
+  }
+  render() {
+    if (this.state.hasError) {
+      return <h2>Щось пішло не так. Спробуйте оновити сторінку.</h2>;
+    }
+    return this.props.children;
+  }
+}
+
 const AppContent = React.memo(() => {
   const favorites = useSelector(selectFavorites);
   const favoritesJSON = useMemo(() => JSON.stringify(favorites), [favorites]);
@@ -44,10 +64,11 @@ const AppContent = React.memo(() => {
 const App = () => (
   <Provider store={store}>
     <Router>
-      <div>
-        {" "}
-        <AppContent />
-      </div>
+      <ErrorBoundary>
+        <div>
+          <AppContent />
+        </div>
+      </ErrorBoundary>
     </Router>
   </Provider>
 );

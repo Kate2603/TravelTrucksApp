@@ -1,3 +1,8 @@
+.catalogPageWrapper {
+  height: 100vh;
+  overflow-y: auto;
+}
+
 .catalogPage {
   display: flex;
   gap: 32px;
@@ -19,8 +24,8 @@
 }
 
 .catalogList {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
+  flex-direction: column;
   gap: 24px;
 }
 

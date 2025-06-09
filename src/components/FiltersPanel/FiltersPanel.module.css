@@ -26,16 +26,15 @@
 
 .features,
 .vehicleTypes {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 8px;
-  justify-content: flex-start;
 }
 
 .featureBtn,
 .vehicleBtn {
-  width: calc((100% - 16px) / 3);
   height: 96px;
+  min-width: 90px;
   padding: 8px;
   border-radius: 10px;
   background-color: transparent;
@@ -52,7 +51,7 @@
     background-color 0.3s,
     border-color 0.3s;
   cursor: pointer;
-  flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 .featureBtn:hover,

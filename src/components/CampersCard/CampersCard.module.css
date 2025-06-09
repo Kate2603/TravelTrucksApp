@@ -20,7 +20,7 @@
 
 .image {
   width: 290px;
-  height: 310px;
+  height: 320px;
   border-radius: 10px;
   object-fit: cover;
   flex-shrink: 0;
@@ -37,52 +37,47 @@
 .header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   gap: 16px;
   flex-wrap: wrap;
 }
 
-.name {
-  font-size: 24px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin: 0;
-}
-
-.priceContainer {
+.priceAndFavorite {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 8px; /* відстань між ціною і кнопкою */
 }
 
 .price {
   font-size: 20px;
   font-weight: 600;
   color: var(--text-primary);
+  margin: 0;
 }
 
 .favoriteButton {
+  width: 24px;
+  height: 24px;
   border: none;
-  border-radius: 50%;
-  padding: 8px;
-  background-color: var(--bg-dark);
+  background-color: transparent;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.favoriteButton:hover {
-  background-color: var(--bg-element-hover);
+  padding: 0;
+  transition: background-color 0.3s ease;
 }
 
 .favoriteIcon {
   width: 24px;
   height: 24px;
-  fill: var(--text-inverted);
+  fill: var(--bg-dark);
+  transition: fill 0.3s ease;
 }
 
+.favoriteButton:hover .favoriteIcon {
+  fill: var(--bg-element-hover);
+}
 .details {
   display: flex;
   align-items: center;
@@ -94,11 +89,17 @@
   flex-wrap: wrap;
 }
 
-.icon {
+.starIcon {
   width: 16px;
   height: 16px;
   fill: currentColor;
   margin-right: 6px;
+  fill: var(--bg-light);
+  transition: fill 0.3s ease;
+}
+
+.starIcon.active {
+  fill: var(--bg-star);
 }
 
 .description {

@@ -1,120 +1,89 @@
-import { createSlice, createSelector } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { fetchCampers, fetchCamperById, fetchCities } from "./campersThunks";
+
+const initialState = {
+  items: [],
+  currentCamper: null,
+  cities: [],
+  status: "idle",
+  isLoading: false,
+  error: null,
+  total: 0,
+};
 
 const campersSlice = createSlice({
   name: "campers",
-  initialState: {
-    items: [],
-    currentCamper: null,
-    status: "idle",
-    isLoading: false,
-    error: null,
-    page: 1,
-    hasMore: true,
-    cities: [],
-    filters: {
-      location: "",
-      form: "",
-      features: [],
-    },
-  },
+  initialState,
   reducers: {
     resetCampers: state => {
       state.items = [];
-      state.page = 1;
-      state.hasMore = true;
       state.status = "idle";
       state.error = null;
+      state.total = 0;
     },
-    incrementPage: state => {
-      state.page += 1;
-    },
-    setFilters: (state, action) => {
-      state.filters = action.payload;
+    setCurrentCamper: (state, action) => {
+      state.currentCamper = action.payload;
     },
   },
   extraReducers: builder => {
     builder
       .addCase(fetchCampers.pending, state => {
-        state.isLoading = true;
-        state.items = [];
-        state.error = null;
         state.status = "loading";
+        state.isLoading = true;
+        state.error = null;
       })
       .addCase(fetchCampers.fulfilled, (state, action) => {
-        state.isLoading = false;
+        state.items = [
+          ...state.items,
+          ...action.payload.items.filter(
+            newCamper =>
+              !state.items.some(existing => existing.id === newCamper.id)
+          ),
+        ];
+        state.total = action.payload.total;
         state.status = "succeeded";
-        state.items = state.items.concat(action.payload);
-        if (action.payload.length === 0) {
-          state.hasMore = false;
-        }
+        state.isLoading = false;
+        state.error = null;
       })
       .addCase(fetchCampers.rejected, (state, action) => {
-        state.isLoading = false;
         state.status = "failed";
+        state.isLoading = false;
         state.error = action.payload || action.error.message;
       })
       .addCase(fetchCamperById.pending, state => {
         state.isLoading = true;
         state.error = null;
-        state.currentCamper = null;
-        state.status = "loading";
       })
       .addCase(fetchCamperById.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.status = "succeeded";
         state.currentCamper = action.payload;
+        state.isLoading = false;
+        state.error = null;
       })
       .addCase(fetchCamperById.rejected, (state, action) => {
         state.isLoading = false;
-        state.status = "failed";
         state.error = action.payload || action.error.message;
       })
       .addCase(fetchCities.pending, state => {
         state.isLoading = true;
         state.error = null;
-        state.status = "loading";
       })
       .addCase(fetchCities.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.status = "succeeded";
         state.cities = action.payload;
+        state.isLoading = false;
+        state.error = null;
       })
       .addCase(fetchCities.rejected, (state, action) => {
         state.isLoading = false;
-        state.status = "failed";
         state.error = action.payload || action.error.message;
       });
   },
 });
 
-export const { resetCampers, incrementPage, setFilters } = campersSlice.actions;
+// --- Додатковий селектор для фільтрованих кемперів (як приклад)
+export const selectFilteredCampers = state => {
+  // Поки що просто повертаємо всі кемпери
+  return state.campers.items;
+};
 
-export const selectCampersItems = state => state.campers.items;
-export const selectCampersFilters = state => state.campers.filters;
-
-export const selectFilteredCampers = createSelector(
-  [selectCampersItems, selectCampersFilters],
-  (campers, filters) => {
-    return campers.filter(camper => {
-      const matchLocation =
-        !filters.location ||
-        camper.location.toLowerCase().includes(filters.location.toLowerCase());
-
-      const matchForm =
-        !filters.form ||
-        camper.form.toLowerCase() === filters.form.toLowerCase();
-
-      const matchFeatures =
-        !filters.features.length ||
-        filters.features.every(feature => camper[feature]);
-
-      return matchLocation && matchForm && matchFeatures;
-    });
-  }
-);
-
-export const selectIsLoading = state => state.campers.isLoading;
-
+export const { resetCampers, setCurrentCamper } = campersSlice.actions;
 export default campersSlice.reducer;
-export { fetchCampers, fetchCamperById, fetchCities };

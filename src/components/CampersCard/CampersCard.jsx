@@ -73,13 +73,31 @@ const CampersCard = ({ camper }) => {
         <div className={styles.content}>
           <div className={styles.header}>
             <h3 className={styles.name}>{name}</h3>
-            <p className={styles.price}>{formatPrice(price)}</p>
+            <div className={styles.priceAndFavorite}>
+              <p className={styles.price}>{formatPrice(price)}</p>
+              <button
+                onClick={handleToggleFavorite}
+                className={`${styles.favoriteButton} ${isFavorite ? styles.active : ""}`}
+                aria-label={
+                  isFavorite ? "Remove from favorites" : "Add to favorites"
+                }
+                type="button"
+              >
+                <svg className={styles.favoriteIcon}>
+                  <use href="/sprite.svg#heart" />
+                </svg>
+              </button>
+            </div>
           </div>
 
           <div className={styles.subinfo}>
             <span className={styles.rating}>
-              <svg className={styles.icon}>
-                <use href="/sprite.svg#icon-star" />
+              <svg
+                className={`${styles.icon} ${styles.starIcon} ${
+                  rating ? styles.starIconActive : ""
+                }`}
+              >
+                <use href="/sprite.svg#star" />
               </svg>
               {rating
                 ? `${rating.toFixed(1)} (${reviewsCount || 0} Reviews)`
@@ -117,18 +135,6 @@ const CampersCard = ({ camper }) => {
             <Link to={`/catalog/${id}`} className={styles.showMoreButton}>
               Show More
             </Link>
-            <button
-              onClick={handleToggleFavorite}
-              className={styles.favoriteButton}
-              style={{ backgroundColor: isFavorite ? "#E44848" : "#101828" }}
-              aria-label={
-                isFavorite ? "Remove from favorites" : "Add to favorites"
-              }
-            >
-              <svg className={styles.favoriteIcon}>
-                <use href="/sprite.svg#icon-heart" />
-              </svg>
-            </button>
           </div>
         </div>
       </div>

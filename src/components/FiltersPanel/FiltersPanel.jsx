@@ -1,11 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  setLocation,
-  setForm,
-  toggleFeature,
-  resetFilters,
-} from "../../redux/filters/filtersSlice";
 import styles from "./FiltersPanel.module.css";
 
 const VEHICLE_TYPES = [
@@ -15,7 +8,6 @@ const VEHICLE_TYPES = [
 ];
 
 const FEATURES = [
-  { key: "location", label: "Location", icon: "icon-location" },
   { key: "airConditioner", label: "AC", icon: "icon-wind" },
   { key: "kitchen", label: "Kitchen", icon: "icon-cup-hot" },
   { key: "tv", label: "TV", icon: "icon-tv" },
@@ -27,54 +19,43 @@ const FEATURES = [
   { key: "water", label: "Water", icon: "ion_water-outline" },
 ];
 
-const FiltersPanel = ({ onFilterChange }) => {
-  const dispatch = useDispatch();
-  const { location, form, features } = useSelector(state => state.filters);
+const FiltersPanel = ({ filters, onFilterChange }) => {
+  const [localLocation, setLocalLocation] = useState(filters.location || "");
+  const [localForm, setLocalForm] = useState(filters.form || "");
+  const [localFeatures, setLocalFeatures] = useState(filters.features || []);
 
-  // локальні фільтри — НЕ в redux
-  const [localLocation, setLocalLocation] = useState(location);
-  const [localForm, setLocalForm] = useState(form);
-  const [localFeatures, setLocalFeatures] = useState(features);
+  // Синхронізація локальних фільтрів з props
+  useEffect(() => {
+    setLocalLocation(filters.location || "");
+    setLocalForm(filters.form || "");
+    setLocalFeatures(filters.features || []);
+  }, [filters.location, filters.form, filters.features]);
 
-  // при кліку на Search
-  const handleSearch = () => {
-    dispatch(setLocation(localLocation));
-    dispatch(setForm(localForm));
-    // очистити й заново активувати обрані features
-    dispatch(resetFilters());
-    if (localForm) dispatch(setForm(localForm));
-    if (localLocation) dispatch(setLocation(localLocation));
-    localFeatures.forEach(f => dispatch(toggleFeature(f)));
+  // Замінимо автоматичне оновлення на ручне через кнопку Search
+  // useEffect видаляємо, щоб не оновлювалося на кожну зміну
 
-    // викликаємо зміну каталогу
-    onFilterChange({
-      location: localLocation,
-      form: localForm,
-      features: localFeatures,
-    });
-  };
-
-  // при кліку на Reset
-  const handleReset = () => {
-    dispatch(resetFilters());
-    setLocalLocation("");
-    setLocalForm("");
-    setLocalFeatures([]);
-
-    // Повністю скинути фільтри
-    onFilterChange({
-      location: "",
-      form: "",
-      features: [],
-    });
-  };
-
-  const toggleLocalFeature = featureKey => {
+  const toggleFeature = featureKey => {
     setLocalFeatures(prev =>
       prev.includes(featureKey)
         ? prev.filter(f => f !== featureKey)
         : [...prev, featureKey]
     );
+  };
+
+  const resetFilters = () => {
+    setLocalLocation("");
+    setLocalForm("");
+    setLocalFeatures([]);
+    onFilterChange({ location: "", form: "", features: [] }); // Скидаємо зовнішні фільтри теж
+  };
+
+  // Ось функція, яка викликається при натисканні кнопки Search
+  const searchFilters = () => {
+    onFilterChange({
+      location: localLocation.trim(),
+      form: localForm,
+      features: localFeatures,
+    });
   };
 
   return (
@@ -90,6 +71,7 @@ const FiltersPanel = ({ onFilterChange }) => {
           onChange={e => setLocalLocation(e.target.value)}
           placeholder="Enter location"
           className={styles.input}
+          autoComplete="off"
         />
       </div>
 
@@ -101,11 +83,14 @@ const FiltersPanel = ({ onFilterChange }) => {
           {FEATURES.map(({ key, label, icon }) => (
             <button
               key={key}
-              className={`${styles.featureBtn} ${localFeatures.includes(key) ? styles.active : ""}`}
-              onClick={() => toggleLocalFeature(key)}
               type="button"
+              className={`${styles.featureBtn} ${
+                localFeatures.includes(key) ? styles.active : ""
+              }`}
+              onClick={() => toggleFeature(key)}
+              aria-pressed={localFeatures.includes(key)}
             >
-              <svg className={styles.featureIcon}>
+              <svg className={styles.featureIcon} aria-hidden="true">
                 <use href={`/sprite.svg#${icon}`} />
               </svg>
               <span className={styles.featureLabel}>{label}</span>
@@ -120,13 +105,16 @@ const FiltersPanel = ({ onFilterChange }) => {
           {VEHICLE_TYPES.map(({ value, label, icon }) => (
             <button
               key={value}
-              className={`${styles.vehicleBtn} ${localForm === value ? styles.active : ""}`}
+              type="button"
+              className={`${styles.vehicleBtn} ${
+                localForm === value ? styles.active : ""
+              }`}
               onClick={() =>
                 setLocalForm(prev => (prev === value ? "" : value))
               }
-              type="button"
+              aria-pressed={localForm === value}
             >
-              <svg className={styles.vehicleIcon}>
+              <svg className={styles.vehicleIcon} aria-hidden="true">
                 <use href={`/sprite.svg#${icon}`} />
               </svg>
               <span>{label}</span>
@@ -136,10 +124,18 @@ const FiltersPanel = ({ onFilterChange }) => {
       </div>
 
       <div className={styles.buttons}>
-        <button className={styles.searchButton} onClick={handleSearch}>
+        <button
+          type="button"
+          className={styles.searchButton}
+          onClick={searchFilters}
+        >
           Search
         </button>
-        <button className={styles.resetButton} onClick={handleReset}>
+        <button
+          type="button"
+          className={styles.resetButton}
+          onClick={resetFilters}
+        >
           Reset
         </button>
       </div>
