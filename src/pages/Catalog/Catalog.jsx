@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import FiltersPanel from ".";
-import CampersCard from "./components/CampersCard/CampersCard";
-import Loader from "./components/Loader/Loader";
+import FiltersPanel from "../../components/FiltersPanel/FiltersPanel";
+
+import CampersCard from "../../components/CampersCard/CampersCard";
+import Loader from "../../components/Loader/Loader";
 import styles from "./Catalog.module.css";
-import { fetchCampers } from "../redux/campers/campersThunks";
+import { fetchCampers } from "../../redux/campers/campersThunks";
 
 const Catalog = () => {
   const dispatch = useDispatch();

@@ -3,8 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchCities } from "../../redux/campers/campersThunks";
 import styles from "./FiltersPanel.module.css";
 
-src / components / FiltersPanel / FiltersPanel.jsx;
-
 const FiltersPanel = ({ filters = {}, onFiltersChange = () => {} }) => {
   const dispatch = useDispatch();
   const cities = useSelector(state => state?.campers?.cities) || [];
